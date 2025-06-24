@@ -1,0 +1,97 @@
+/* General Styles */
+.UpdateVHC-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f5f5f5;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .UpdateVHC-back-button {
+    background: none;
+    border: none;
+    color: #288598;
+    font-size: 16px;
+    cursor: pointer;
+    margin-bottom: 20px;
+  }
+  
+  .UpdateVHC-back-button:hover {
+    text-decoration: underline;
+  }
+  
+  .UpdateVHC-title {
+    text-align: center;
+    color: #288598;
+    margin-bottom: 20px;
+  }
+  
+  .UpdateVHC-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .UpdateVHC-section-title {
+    color: #288598;
+    margin-bottom: 10px;
+  }
+  
+  .UpdateVHC-subsection-title {
+    color: #1f6a7a;
+    margin-bottom: 10px;
+  }
+  
+  .UpdateVHC-field {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+  
+  .UpdateVHC-field label {
+    font-weight: bold;
+    color: #333;
+  }
+  
+  .UpdateVHC-field input,
+  .UpdateVHC-field textarea,
+  .UpdateVHC-field select {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+  }
+  
+  .UpdateVHC-field textarea {
+    resize: vertical;
+    min-height: 100px;
+  }
+  
+  .UpdateVHC-update-button {
+    background-color: #288598;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 20px;
+  }
+  
+  .UpdateVHC-update-button:hover {
+    background-color: #1f6a7a;
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .UpdateVHC-container {
+      padding: 15px;
+    }
+  
+    .UpdateVHC-field input,
+    .UpdateVHC-field textarea,
+    .UpdateVHC-field select {
+      width: 100%;
+    }
+  }

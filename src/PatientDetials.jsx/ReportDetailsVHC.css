@@ -1,0 +1,134 @@
+/* Main container */
+.rvhc-container {
+    padding: 20px;
+    max-width: 800px;
+    margin: 0 auto;
+    font-family: Arial, sans-serif;
+    color: #333;
+    word-wrap: break-word; /* Ensure long text wraps within the container */
+    overflow-wrap: break-word; /* Alternative to word-wrap for better support */
+  }
+  
+  /* Back button */
+  .rvhc-back-button {
+    background: none;
+    border: none;
+    color: #288598;
+    font-size: 16px;
+    cursor: pointer;
+    padding: 10px 0;
+    margin-bottom: 20px;
+    text-decoration: none;
+    display: inline-block;
+  }
+  
+  .rvhc-back-button:hover {
+    text-decoration: underline;
+  }
+  
+  /* Title */
+  .rvhc-title {
+    color: #288598;
+    font-size: 24px;
+    margin-bottom: 20px;
+    text-align: center;
+    word-wrap: break-word; /* Ensure long titles don't overflow */
+  }
+  
+  /* Section titles */
+  .rvhc-section-title {
+    color: #288598;
+    font-size: 20px;
+    margin-top: 20px;
+    margin-bottom: 10px;
+    border-bottom: 2px solid #288598;
+    padding-bottom: 5px;
+    word-wrap: break-word; /* Ensure long section titles don't overflow */
+  }
+  
+  /* Subsection titles */
+  .rvhc-subsection-title {
+    color: #288598;
+    font-size: 18px;
+    margin-top: 15px;
+    margin-bottom: 10px;
+    word-wrap: break-word; /* Ensure long subsection titles don't overflow */
+  }
+  
+  /* Fields */
+  .rvhc-field {
+    display: flex;
+    flex-direction: column; /* Stack label and span vertically */
+    margin-bottom: 10px;
+    padding: 10px;
+    background-color: #f0f8fa; /* Light variant of #288598 */
+    border-radius: 5px;
+    word-wrap: break-word; /* Ensure long text wraps within the field */
+    overflow-wrap: break-word; /* Alternative to word-wrap for better support */
+  }
+  
+  .rvhc-field label {
+    font-weight: bold;
+    color: #288598;
+    margin-bottom: 5px; /* Add space between label and span */
+    word-wrap: break-word; /* Ensure long labels don't overflow */
+  }
+  
+  .rvhc-field span {
+    color: #555;
+    word-wrap: break-word; /* Ensure long text doesn't overflow */
+    overflow-wrap: break-word; /* Alternative to word-wrap for better support */
+  }
+  
+  /* Update button */
+  .rvhc-update-button {
+    background-color: #288598;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+    margin-top: 20px;
+    width: 100%;
+    white-space: nowrap; /* Prevent button text from wrapping */
+  }
+  
+  .rvhc-update-button:hover {
+    background-color: #1f6a7a; /* Darker variant of #288598 */
+  }
+  
+  /* Responsive Design */
+  @media (min-width: 768px) {
+    /* For desktops and larger screens */
+    .rvhc-container {
+      padding: 30px;
+    }
+  
+    .rvhc-title {
+      font-size: 28px; /* Increase title size for larger screens */
+    }
+  
+    .rvhc-section-title {
+      font-size: 22px; /* Increase section title size */
+    }
+  
+    .rvhc-subsection-title {
+      font-size: 20px; /* Increase subsection title size */
+    }
+  
+    .rvhc-field {
+      padding: 15px; /* Increase padding for better spacing */
+    }
+  
+    .rvhc-update-button {
+      font-size: 18px; /* Increase button font size */
+    }
+  }
+  
+  @media (min-width: 1024px) {
+    /* For large desktops */
+    .rvhc-container {
+      max-width: 1000px; /* Increase max-width for larger screens */
+    }
+  }

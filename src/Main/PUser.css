@@ -1,0 +1,297 @@
+/* Main Container */
+.puser-container {
+  padding: 20px;
+  background-color: #288598;
+  min-height: 100vh;
+}
+
+/* Back Button */
+.puser-backButton {
+  background-color: transparent;
+  border: none;
+  color: #fff;
+  font-size: 16px;
+  cursor: pointer;
+  margin-bottom: 20px;
+}
+
+.puser-backButton:hover {
+  text-decoration: underline;
+}
+
+/* Patient Card */
+.puser-card {
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+}
+
+/* Profile Header */
+.puser-profileHeader {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.puser-profileImg {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+/* Info Table */
+.puser-infoTable {
+  overflow-x: auto; /* Make table scrollable on small screens */
+}
+
+.puser-infoTable table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 600px; /* Minimum width for the table */
+}
+
+.puser-infoTable td {
+  padding: 8px;
+  border-bottom: 1px solid #ddd;
+}
+
+.puser-infoTable td:first-child {
+  font-weight: bold;
+  width: 30%;
+}
+
+/* Family Details */
+.puser-familyDetails {
+  margin-top: 20px;
+  overflow-x: auto; /* Make table scrollable on small screens */
+}
+
+.puser-familyDetails table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 600px; /* Minimum width for the table */
+}
+
+.puser-familyDetails th,
+.puser-familyDetails td {
+  padding: 8px;
+  border: 1px solid #ddd;
+  text-align: left;
+}
+
+.puser-familyDetails th {
+  background-color: #288598;
+  color: #fff;
+}
+
+/* Medicines and Equipments Sections */
+.puser-medicinesContainer,
+.puser-equipmentsContainer {
+  margin-top: 20px;
+  overflow-x: auto; /* Make table scrollable on small screens */
+}
+
+.puser-medicinesContainer table,
+.puser-equipmentsContainer table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 600px; /* Minimum width for the table */
+}
+
+.puser-medicinesContainer th,
+.puser-medicinesContainer td,
+.puser-equipmentsContainer th,
+.puser-equipmentsContainer td {
+  padding: 8px;
+  border: 1px solid #ddd;
+  text-align: left;
+}
+
+.puser-medicinesContainer th,
+.puser-equipmentsContainer th {
+  background-color: #288598;
+  color: #fff;
+}
+
+/* Reports Section */
+.puser-reportsContainer {
+  margin-top: 20px;
+  text-align: center;
+  background-color: #e3f2fd; /* Light blue background */
+  padding: 15px;
+  border-radius: 8px;
+}
+
+.puser-reportsLink {
+  text-decoration: none;
+  color: #288598;
+}
+
+.puser-reportsLink:hover {
+  text-decoration: underline;
+}
+
+/* Action Buttons */
+.puser-buttonsContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.puser-actionBtn {
+  background-color: #288598;
+  color: #fff;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  text-decoration: none;
+  text-align: center;
+  flex: 1 1 calc(33.333% - 20px); /* 3 buttons in a row */
+  max-width: calc(33.333% - 20px); /* Limit button width */
+}
+
+.puser-actionBtn:hover {
+  background-color: #1f6a7a;
+  color: #e3f2fd;
+}
+
+.puser-smallBtn {
+  padding: 8px 12px;
+  font-size: 14px;
+}
+
+/* Update Button */
+.puser-updateButton {
+  background-color: #4caf50; /* Green color */
+  color: #fff;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 20px;
+  width: 100%;
+}
+
+.puser-updateButton:hover {
+  background-color: #45a049;
+}
+
+/* Delete Button */
+.puser-deleteButton {
+  background-color: #ff4d4d; /* Red color */
+  color: #fff;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 20px;
+  width: 100%;
+}
+
+.puser-deleteButton:hover {
+  background-color: #cc0000;
+}
+
+/* Print Button */
+.puser-deleteButton2 {
+  background-color: #FFC107; /* Yellow color */
+  color: #fff;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 20px;
+  width: 100%;
+}
+
+.puser-deleteButton2:hover {
+  background-color: #bf920b;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .puser-actionBtn {
+    flex: 1 1 calc(50% - 20px); /* 2 buttons in a row on smaller screens */
+    max-width: calc(50% - 20px);
+  }
+}
+
+@media (max-width: 480px) {
+  .puser-actionBtn {
+    flex: 1 1 100%; /* 1 button per row on very small screens */
+    max-width: 100%;
+  }
+}
+
+/* Reports Container Image */
+.puser-reportsContainer img {
+  height: 80px;
+  width: 80px;
+}
+
+.puser-reportsContainer {
+  display: flex;
+  justify-content: center;
+  background-color: #fff;
+  box-shadow: 1px 0px 10px 0px #288598;
+  align-items: center;
+}
+
+/* Print Styles */
+@media print {
+  h1 {
+    font-size: 18px;
+    color: #283593;
+    margin-bottom: 5px;
+    page-break-after: avoid; /* Ensures title is not alone on a blank page */
+  }
+
+  .section {
+    page-break-before: auto;  /* Allows natural flow of sections */
+    page-break-inside: avoid; /* Prevents breaking inside a section */
+  }
+
+  .section-header {
+    font-size: 14px;
+    background-color: #d3d3d3;
+    padding: 5px;
+    margin-top: 10px;
+    margin-bottom: 5px;
+    page-break-after: avoid; /* Ensures header stays with the section */
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 10px;
+    page-break-inside: auto; /* Allows tables to break naturally if needed */
+  }
+
+  th, td {
+    border: 1px solid #ddd;
+    padding: 6px;
+    text-align: left;
+    font-size: 12px;
+  }
+
+  th {
+    background-color: #f5f5f5;
+  }
+
+  tr:nth-child(even) {
+    background-color: #f9f9f9;
+  }
+}
+.puser-loading-container{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+.puser-loading-container img{
+  width: 100px;  
+  height: auto;
+}

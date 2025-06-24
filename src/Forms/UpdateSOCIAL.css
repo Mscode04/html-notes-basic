@@ -1,0 +1,111 @@
+/* General Styles */
+.UpdateSOCIAL-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f5f5f5;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .UpdateSOCIAL-back-button {
+    background: none;
+    border: none;
+    color: #288598;
+    font-size: 16px;
+    cursor: pointer;
+    margin-bottom: 20px;
+  }
+  
+  .UpdateSOCIAL-back-button:hover {
+    text-decoration: underline;
+  }
+  
+  .UpdateSOCIAL-title {
+    text-align: center;
+    color: #288598;
+    margin-bottom: 20px;
+  }
+  
+  .UpdateSOCIAL-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .UpdateSOCIAL-section-title {
+    color: #288598;
+    margin-bottom: 10px;
+  }
+  
+  .UpdateSOCIAL-field {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+  
+  .UpdateSOCIAL-field label {
+    font-weight: bold;
+    color: #333;
+  }
+  
+  .UpdateSOCIAL-field input {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+  }
+  
+  .UpdateSOCIAL-dynamic-field-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    background-color: #fff;
+    padding: 15px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .UpdateSOCIAL-add-btn {
+    background-color: #288598;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    align-self: flex-start;
+  }
+  
+  .UpdateSOCIAL-add-btn:hover {
+    background-color: #1f6a7a;
+  }
+  
+  .UpdateSOCIAL-update-button {
+    background-color: #288598;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 20px;
+  }
+  
+  .UpdateSOCIAL-update-button:hover {
+    background-color: #1f6a7a;
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .UpdateSOCIAL-container {
+      padding: 15px;
+    }
+  
+    .UpdateSOCIAL-dynamic-field-group {
+      flex-direction: column;
+    }
+  
+    .UpdateSOCIAL-field input {
+      width: 100%;
+    }
+  }

@@ -1,0 +1,137 @@
+/* Base Styles */
+.medlist-container {
+    background-color: #288598;
+    padding: 20px;
+    min-height: 100vh;
+    color: #fff;
+}
+
+.medlist-back-button {
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 16px;
+    cursor: pointer;
+    margin-bottom: 20px;
+}
+
+.medlist-back-button:hover {
+    text-decoration: underline;
+}
+
+.medlist-title {
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 24px;
+}
+
+.medlist-input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+    margin-bottom: 15px;
+}
+
+.medlist-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #fff;
+    color: #333;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.medlist-table th, .medlist-table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.medlist-table th {
+    background-color: #1f6a7a;
+    color: #fff;
+}
+
+.medlist-table tr:hover {
+    background-color: #f1f1f1;
+}
+
+.medlist-add-button, .medlist-delete-button, .medlist-cancel-button {
+    background-color: #4caf50;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.medlist-delete-button {
+    background-color: #dc3545;
+}
+
+.medlist-cancel-button {
+    background-color: #888;
+}
+
+.medlist-pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.medlist-pagination button {
+    background-color: #1f6a7a;
+    color: #fff;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin: 0 5px;
+}
+
+.medlist-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.medlist-modal-content {
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    color: #333;
+    width: 300px;
+}
+
+.medlist-modal-content h3 {
+    color: #288598;
+    margin-bottom: 20px;
+    font-size: 20px;
+}
+
+.medlist-close {
+    float: right;
+    cursor: pointer;
+    font-size: 20px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .medlist-table th, .medlist-table td {
+        padding: 8px;
+    }
+    .medlist-add-button, .medlist-delete-button {
+        padding: 8px 16px;
+    }
+}

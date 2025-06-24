@@ -1,0 +1,270 @@
+/* Premium Death Certificate Form Styles */
+.DeathAdd-container {
+    background: linear-gradient(135deg, #1a6b7a 0%, #288598 100%);
+    padding: 40px;
+    min-height: 100vh;
+    color: #fff;
+    font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+}
+
+.DeathAdd-backButton {
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    color: #fff;
+    font-size: 16px;
+    cursor: pointer;
+    margin-bottom: 30px;
+    padding: 10px 20px;
+    border-radius: 6px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(5px);
+}
+
+.DeathAdd-backButton:hover {
+    background: rgba(255, 255, 255, 0.2);
+    text-decoration: none;
+    transform: translateX(-3px);
+}
+
+
+
+.DeathAdd-title {
+    text-align: center;
+    margin-bottom: 40px;
+    font-size: 28px;
+    font-weight: 300;
+    letter-spacing: 0.5px;
+    position: relative;
+    padding-bottom: 15px;
+}
+
+.DeathAdd-title::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 2px;
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.DeathAdd-patientInfo {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 25px;
+    border-radius: 10px;
+    margin-bottom: 30px;
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+.DeathAdd-patientInfo h3 {
+    color: #fff;
+    margin-bottom: 20px;
+    font-size: 20px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.DeathAdd-patientInfo h3::before {
+    content: "🞄";
+    color: #fff;
+    font-size: 24px;
+}
+
+.DeathAdd-patientInfo p {
+    margin: 8px 0;
+    line-height: 1.6;
+    display: flex;
+}
+
+.DeathAdd-patientInfo p strong {
+    min-width: 150px;
+    font-weight: 500;
+    opacity: 0.9;
+}
+
+.DeathAdd-form {
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+    color: #333;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.DeathAdd-form h3 {
+    color: #288598;
+    margin-bottom: 25px;
+    font-size: 22px;
+    font-weight: 500;
+    position: relative;
+    padding-bottom: 10px;
+}
+
+.DeathAdd-form h3::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 50px;
+    height: 2px;
+    background: linear-gradient(90deg, #288598 0%, rgba(40, 133, 152, 0.3) 100%);
+}
+
+.DeathAdd-field {
+    margin-bottom: 20px;
+}
+
+.DeathAdd-field label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: #288598;
+    font-size: 15px;
+}
+
+.DeathAdd-field input,
+.DeathAdd-field textarea,
+.DeathAdd-field select {
+    width: 100%;
+    padding: 14px 16px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 15px;
+    transition: all 0.3s ease;
+    background-color: #fafafa;
+}
+
+.DeathAdd-field input:focus,
+.DeathAdd-field textarea:focus,
+.DeathAdd-field select:focus {
+    border-color: #288598;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(40, 133, 152, 0.1);
+    background-color: #fff;
+}
+
+.DeathAdd-field textarea {
+    min-height: 120px;
+    resize: vertical;
+}
+
+.DeathAdd-field select {
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23288598'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 16px center;
+    background-size: 16px;
+    padding-right: 40px;
+    cursor: pointer;
+}
+
+.DeathAdd-submitButton {
+    background: linear-gradient(135deg, #288598 0%, #1a6b7a 100%);
+    color: #fff;
+    border: none;
+    padding: 16px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 30px;
+    transition: all 0.3s ease;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    box-shadow: 0 4px 12px rgba(26, 107, 122, 0.2);
+}
+
+.DeathAdd-submitButton:hover:not(:disabled) {
+    background: linear-gradient(135deg, #1a6b7a 0%, #288598 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(26, 107, 122, 0.3);
+}
+
+.DeathAdd-submitButton:active:not(:disabled) {
+    transform: translateY(0);
+}
+
+.DeathAdd-submitButton:disabled {
+    background: #cccccc;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+/* Enhanced Toast Notifications */
+.Toastify__toast-container--top-center {
+    top: 1em;
+    left: 50%;
+    transform: translateX(-50%);
+    width: auto;
+    max-width: 90%;
+}
+
+.Toastify__toast {
+    border-radius: 10px !important;
+    padding: 16px 24px !important;
+    font-size: 15px !important;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15) !important;
+    font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif !important;
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.Toastify__toast--success {
+    background: linear-gradient(135deg, #28a745 0%, #1e7e34 100%) !important;
+}
+
+.Toastify__toast--error {
+    background: linear-gradient(135deg, #dc3545 0%, #c82333 100%) !important;
+}
+
+.Toastify__close-button {
+    align-self: center !important;
+    opacity: 0.8 !important;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .DeathAdd-container {
+        padding: 25px 20px;
+    }
+    
+    .DeathAdd-title {
+        font-size: 24px;
+        margin-bottom: 30px;
+    }
+    
+    .DeathAdd-patientInfo {
+        padding: 20px;
+    }
+    
+    .DeathAdd-form {
+        padding: 25px;
+    }
+}
+
+@media (max-width: 480px) {
+    .DeathAdd-container {
+        padding: 20px 15px;
+    }
+    
+    .DeathAdd-title {
+        font-size: 22px;
+    }
+    
+    .DeathAdd-patientInfo p {
+        flex-direction: column;
+    }
+    
+    .DeathAdd-patientInfo p strong {
+        margin-bottom: 4px;
+    }
+}

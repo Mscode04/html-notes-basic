@@ -1,0 +1,281 @@
+/* Main Container */
+.PTDetail-container {
+  padding: 20px;
+  background-color: #288598;
+  min-height: 100vh;
+}
+
+/* Back Button */
+.PTDetail-backButton {
+  background-color: transparent;
+  border: none;
+  color: #fff;
+  font-size: 16px;
+  cursor: pointer;
+  margin-bottom: 20px;
+}
+
+.PTDetail-backButton:hover {
+  text-decoration: underline;
+}
+
+/* Patient Card */
+.PTDetail-card {
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+}
+
+/* Profile Header */
+.PTDetail-profileHeader {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.PTDetail-profileImg {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+/* Info Table */
+.PTDetail-infoTable {
+  overflow-x: auto; /* Make table scrollable on small screens */
+}
+
+.PTDetail-infoTable table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 600px; /* Minimum width for the table */
+}
+
+.PTDetail-infoTable td {
+  padding: 8px;
+  border-bottom: 1px solid #ddd;
+}
+
+.PTDetail-infoTable td:first-child {
+  font-weight: bold;
+  width: 30%;
+}
+
+/* Family Details */
+.PTDetail-familyDetails {
+  margin-top: 20px;
+  overflow-x: auto; /* Make table scrollable on small screens */
+}
+
+.PTDetail-familyDetails table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 600px; /* Minimum width for the table */
+}
+
+.PTDetail-familyDetails th,
+.PTDetail-familyDetails td {
+  padding: 8px;
+  border: 1px solid #ddd;
+  text-align: left;
+}
+
+.PTDetail-familyDetails th {
+  background-color: #288598;
+  color: #fff;
+}
+
+/* Medicines and Equipments Sections */
+.PTDetail-medicinesContainer,
+.PTDetail-equipmentsContainer {
+  margin-top: 20px;
+  overflow-x: auto; /* Make table scrollable on small screens */
+}
+
+.PTDetail-medicinesContainer table,
+.PTDetail-equipmentsContainer table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 600px; /* Minimum width for the table */
+}
+
+.PTDetail-medicinesContainer th,
+.PTDetail-medicinesContainer td,
+.PTDetail-equipmentsContainer th,
+.PTDetail-equipmentsContainer td {
+  padding: 8px;
+  border: 1px solid #ddd;
+  text-align: left;
+}
+
+.PTDetail-medicinesContainer th,
+.PTDetail-equipmentsContainer th {
+  background-color: #288598;
+  color: #fff;
+}
+
+/* Reports Section */
+.PTDetail-reportsContainer {
+  margin-top: 20px;
+  text-align: center;
+  background-color: #e3f2fd; /* Light blue background */
+  padding: 15px;
+  border-radius: 8px;
+}
+
+.PTDetail-reportsLink {
+  text-decoration: none;
+  color: #288598;
+}
+
+.PTDetail-reportsLink:hover {
+  text-decoration: underline;
+}
+
+/* Action Buttons */
+.PTDetail-buttonsContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.PTDetail-actionBtn {
+  background-color: #288598;
+  color: #fff;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  text-decoration: none;
+  text-align: center;
+  flex: 1 1 calc(33.333% - 20px); /* 3 buttons in a row */
+  max-width: calc(33.333% - 20px); /* Limit button width */
+}
+
+.PTDetail-actionBtn:hover {
+  background-color: #1f6a7a;
+  color: #e3f2fd;
+}
+
+.PTDetail-smallBtn {
+  padding: 8px 12px;
+  font-size: 14px;
+}
+
+/* Update Button */
+.PTDetail-updateButton {
+  background-color: #4caf50; /* Green color */
+  color: #fff;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 20px;
+  width: 100%;
+}
+
+.PTDetail-updateButton:hover {
+  background-color: #45a049;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .PTDetail-actionBtn {
+    flex: 1 1 calc(50% - 20px); /* 2 buttons in a row on smaller screens */
+    max-width: calc(50% - 20px);
+  }
+}
+
+@media (max-width: 480px) {
+  .PTDetail-actionBtn {
+    flex: 1 1 100%; /* 1 button per row on very small screens */
+    max-width: 100%;
+  }
+}
+.PTDetail-reportsContainer img{
+  height: 80px;
+  width: 80px;
+}
+.PTDetail-reportsContainer{
+  display: flex;
+  justify-content: center;
+  background-color: #fff;
+  box-shadow: 1px 0px 10px 0px #288598;
+  align-items: center;
+}
+.PTDetail-deleteButton {
+  background-color: #ff4d4d; 
+  color: #fff;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 20px;
+  width: 100%;
+}
+
+.PTDetail-deleteButton:hover {
+  background-color: #cc0000;
+}
+
+
+.PTDetail-deleteButton2 {
+  background-color: #FFC107; 
+  color: #fff;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 20px;
+  width: 100%;
+}
+
+.PTDetail-deleteButton2:hover {
+  background-color: #bf920b;
+}
+
+@media print {
+  h1 {
+    font-size: 18px;
+    color: #283593;
+    margin-bottom: 5px;
+    page-break-after: avoid; /* Ensures title is not alone on a blank page */
+  }
+
+  .section {
+    page-break-before: auto;  /* Allows natural flow of sections */
+    page-break-inside: avoid; /* Prevents breaking inside a section */
+  }
+
+  .section-header {
+    font-size: 14px;
+    background-color: #d3d3d3;
+    padding: 5px;
+    margin-top: 10px;
+    margin-bottom: 5px;
+    page-break-after: avoid; /* Ensures header stays with the section */
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 10px;
+    page-break-inside: auto; /* Allows tables to break naturally if needed */
+  }
+
+  th, td {
+    border: 1px solid #ddd;
+    padding: 6px;
+    text-align: left;
+    font-size: 12px;
+  }
+
+  th {
+    background-color: #f5f5f5;
+  }
+
+  tr:nth-child(even) {
+    background-color: #f9f9f9;
+  }
+}

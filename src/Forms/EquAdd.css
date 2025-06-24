@@ -1,0 +1,287 @@
+/* Base Styles */
+.EquAdd-container {
+    background-color: #288598;
+    padding: 20px;
+    min-height: 100vh;
+    color: #fff;
+  }
+  
+  .EquAdd-backButton {
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 16px;
+    cursor: pointer;
+    margin-bottom: 20px;
+  }
+  
+  .EquAdd-backButton:hover {
+    text-decoration: underline;
+  }
+  
+  .EquAdd-title {
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 24px;
+  }
+  
+  .EquAdd-patientInfo {
+    background-color: rgba(255, 255, 255, 0.1);
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+  }
+  
+  .EquAdd-patientInfo h3 {
+    color: #fff;
+    margin-bottom: 15px;
+  }
+  
+  .EquAdd-patientInfo p {
+    margin: 5px 0;
+  }
+  
+  .EquAdd-existingEquipments {
+    margin-bottom: 20px;
+  }
+  
+  .EquAdd-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #fff;
+    color: #333;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .EquAdd-table th,
+  .EquAdd-table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .EquAdd-table th {
+    background-color: #1f6a7a;
+    color: #fff;
+  }
+  
+  .EquAdd-table tr:hover {
+    background-color: #f1f1f1;
+  }
+  
+  .EquAdd-updateButton,
+  .EquAdd-deleteButton {
+    padding: 5px 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-right: 5px;
+  }
+  
+  .EquAdd-updateButton {
+    background-color: #4caf50;
+    color: #fff;
+  }
+  
+  .EquAdd-deleteButton {
+    background-color: #f44336;
+    color: #fff;
+  }
+  
+  .EquAdd-updateForm {
+    padding: 10px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    margin-top: 10px;
+  }
+  
+  .EquAdd-updateForm label {
+    display: block;
+    margin-bottom: 10px;
+  }
+  
+  .EquAdd-updateForm input[type="date"],
+  .EquAdd-updateForm input[type="checkbox"] {
+    margin-left: 10px;
+  }
+  
+  .EquAdd-saveButton {
+    background-color: #288598;
+    color: #fff;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .EquAdd-form {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    color: #333;
+  }
+  
+  .EquAdd-field {
+    margin-bottom: 15px;
+  }
+  
+  .EquAdd-field label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #288598;
+  }
+  
+  .EquAdd-field input,
+  .EquAdd-field textarea,
+  .EquAdd-field select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+  }
+  
+  .EquAdd-field textarea {
+    resize: vertical;
+  }
+  
+  .EquAdd-addButton {
+    background-color: #4caf50;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-bottom: 20px;
+  }
+  
+  .EquAdd-submitButton {
+    background-color: #288598;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 100%;
+  }
+  
+  .EquAdd-submitButton:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+  }
+  
+  /* Toastify Notifications */
+  .Toastify__toast-container--top-center {
+    top: 1em;
+    left: 50%;
+    transform: translateX(-50%);
+    width: auto;
+    max-width: 90%;
+  }
+  
+  .Toastify__toast {
+    border-radius: 8px;
+    padding: 12px 20px;
+    font-size: 14px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .Toastify__toast--success {
+    background-color: #28a745 !important;
+  }
+  
+  .Toastify__toast--error {
+    background-color: #dc3545 !important;
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .EquAdd-table th,
+    .EquAdd-table td {
+      padding: 8px;
+    }
+  
+    .EquAdd-updateForm {
+      padding: 5px;
+    }
+  
+    .EquAdd-field {
+      margin-bottom: 10px;
+    }
+  
+    .EquAdd-addButton,
+    .EquAdd-submitButton {
+      padding: 8px 16px;
+    }
+  }
+
+  /* Responsive Table */
+.EquAdd-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #fff;
+    color: #333;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .EquAdd-table th,
+  .EquAdd-table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .EquAdd-table th {
+    background-color: #1f6a7a;
+    color: #fff;
+  }
+  
+  .EquAdd-table tr:hover {
+    background-color: #f1f1f1;
+  }
+  
+  /* Responsive Table for Small Screens */
+  @media (max-width: 768px) {
+    .EquAdd-table {
+      display: block;
+      overflow-x: auto;
+      white-space: nowrap;
+    }
+  
+    .EquAdd-table th,
+    .EquAdd-table td {
+      padding: 8px;
+    }
+  
+    .EquAdd-table tr {
+      display: flex;
+      flex-direction: column;
+      border-bottom: 2px solid #ddd;
+    }
+  
+    .EquAdd-table td {
+      border-bottom: 1px solid #ddd;
+    }
+  
+    .EquAdd-table td:last-child {
+      border-bottom: none;
+    }
+  
+    .EquAdd-table th {
+      display: none;
+    }
+  
+    .EquAdd-table td::before {
+      content: attr(data-label);
+      font-weight: bold;
+      display: inline-block;
+      width: 120px;
+      color: #288598;
+    }
+  }

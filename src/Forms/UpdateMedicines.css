@@ -1,0 +1,99 @@
+/* Container Styles */
+.UpdateMedicinesContainer {
+    background: #288598;
+    padding: 20px;
+    border-radius: 8px;
+    color: #fff;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  
+  /* Back Button Styles */
+  .UpdateMedicinesBackButton {
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 16px;
+    cursor: pointer;
+    margin-bottom: 20px;
+  }
+  
+  .UpdateMedicinesBackButton:hover {
+    text-decoration: underline;
+  }
+  
+  /* Form Styles */
+  .UpdateMedicinesForm {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .UpdateMedicinesField {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    background: #1f6f7f;
+    padding: 15px;
+    border-radius: 8px;
+  }
+  
+  .UpdateMedicinesInput {
+    padding: 8px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+  }
+  
+  .UpdateMedicinesSelect {
+    padding: 8px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+  }
+  
+  .UpdateMedicinesButton {
+    padding: 10px 15px;
+    border-radius: 4px;
+    border: none;
+    background: #1f6f7f;
+    color: #fff;
+    cursor: pointer;
+  }
+  
+  .UpdateMedicinesButton:hover {
+    background: #165c6b;
+  }
+  
+  /* Table Styles */
+  .UpdateMedicinesTable {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+  }
+  
+  .UpdateMedicinesTable th,
+  .UpdateMedicinesTable td {
+    padding: 10px;
+    border: 1px solid #ccc;
+    text-align: left;
+  }
+  
+  .UpdateMedicinesTable th {
+    background: #1f6f7f;
+  }
+  
+  /* Responsive Table Styles */
+  @media (max-width: 600px) {
+    .UpdateMedicinesTable {
+      display: block;
+      overflow-x: auto;
+      white-space: nowrap;
+    }
+  
+    .UpdateMedicinesTable th,
+    .UpdateMedicinesTable td {
+      min-width: 120px; /* Ensure columns don't collapse too much */
+    }
+  }
+  .medsel{
+    color: black !important;
+  }

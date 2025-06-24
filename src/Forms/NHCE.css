@@ -1,0 +1,169 @@
+/* Premium Classic Form Styles */
+.NHCAdd-container {
+  max-width: 800px;
+  padding: 40px;
+  margin: 30px auto;
+  font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  border: 1px solid #e0e0e0;
+}
+
+.NHCAdd-back-btn {
+  background: none;
+  border: none;
+  color: #2a8ba0;
+  font-size: 16px;
+  cursor: pointer;
+  margin-bottom: 25px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.3s ease;
+  padding: 5px 10px;
+  border-radius: 4px;
+}
+
+.NHCAdd-back-btn:hover {
+  color: #1a6b7a;
+  background-color: #f5f5f5;
+  text-decoration: none;
+}
+
+
+
+.NHCAdd-form {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+.NHCAdd-form h3 {
+  color: #2a8ba0;
+  margin-bottom: 15px;
+  font-size: 24px;
+  font-weight: 600;
+  border-bottom: 2px solid #f0f0f0;
+  padding-bottom: 10px;
+}
+
+.NHCAdd-form label {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-weight: 500;
+  color: #444;
+  font-size: 15px;
+}
+
+.NHCAdd-form input,
+.NHCAdd-form select,
+.NHCAdd-form textarea {
+  padding: 12px 15px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 15px;
+  transition: all 0.3s ease;
+  background-color: #fafafa;
+}
+
+.NHCAdd-form input:focus,
+.NHCAdd-form select:focus,
+.NHCAdd-form textarea:focus {
+  border-color: #2a8ba0;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(42, 139, 160, 0.1);
+  background-color: #fff;
+}
+
+.NHCAdd-form textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+.NHCAdd-form select {
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 15px center;
+  background-size: 15px;
+}
+
+.NHCAdd-submit-btn {
+  background-color: #2a8ba0;
+  color: white;
+  padding: 14px 28px;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  margin-top: 20px;
+  transition: all 0.3s ease;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  align-self: flex-start;
+}
+
+.NHCAdd-submit-btn:disabled {
+  background-color: #a0d1e0;
+  cursor: not-allowed;
+}
+
+.NHCAdd-submit-btn:hover:not(:disabled) {
+  background-color: #1f6f7f;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(42, 139, 160, 0.2);
+}
+
+.NHCAdd-submit-btn:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+/* Form Group Styling */
+.NHCAdd-form-group {
+  display: flex;
+  gap: 20px;
+}
+
+.NHCAdd-form-group > label {
+  flex: 1;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .NHCAdd-container {
+    padding: 30px;
+    margin: 15px;
+  }
+  
+  .NHCAdd-form-group {
+    flex-direction: column;
+    gap: 25px;
+  }
+}
+
+@media (max-width: 480px) {
+  .NHCAdd-container {
+    padding: 20px;
+    margin: 10px;
+    border-radius: 8px;
+  }
+  
+  .NHCAdd-form h3 {
+    font-size: 20px;
+  }
+  
+  .NHCAdd-form input,
+  .NHCAdd-form select,
+  .NHCAdd-form textarea {
+    padding: 10px 12px;
+  }
+  
+  .NHCAdd-submit-btn {
+    width: 100%;
+    padding: 12px;
+  }
+}
+

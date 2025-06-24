@@ -1,0 +1,96 @@
+/* Main container */
+.rdhc-container {
+    padding: 20px;
+    max-width: 800px;
+    margin: 0 auto;
+    font-family: Arial, sans-serif;
+    color: #333;
+  }
+  
+  /* Back button */
+  .rdhc-back-button {
+    background: none;
+    border: none;
+    color: #288598;
+    font-size: 16px;
+    cursor: pointer;
+    padding: 10px 0;
+    margin-bottom: 20px;
+    text-decoration: none;
+    display: inline-block;
+  }
+  
+  .rdhc-back-button:hover {
+    text-decoration: underline;
+  }
+  
+  /* Title */
+  .rdhc-title {
+    color: #288598;
+    font-size: 24px;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  
+  /* Section titles */
+  .rdhc-section-title {
+    color: #288598;
+    font-size: 20px;
+    margin-top: 20px;
+    margin-bottom: 10px;
+    border-bottom: 2px solid #288598;
+    padding-bottom: 5px;
+  }
+  
+  /* Fields */
+  .rdhc-field {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    padding: 10px;
+    background-color: #f0f8fa; /* Light variant of #288598 */
+    border-radius: 5px;
+  }
+  
+  .rdhc-field label {
+    font-weight: bold;
+    color: #288598;
+  }
+  
+  .rdhc-field span {
+    color: #555;
+  }
+  
+  /* Update button */
+  .rdhc-update-button {
+    background-color: #288598;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+    margin-top: 20px;
+    width: 100%;
+  }
+  
+  .rdhc-update-button:hover {
+    background-color: #1f6a7a; /* Darker variant of #288598 */
+  }
+  .custom-button {
+    background-color: rgb(235, 235, 235);
+    color: #288598;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    gap: 8px;
+    cursor: pointer;
+    transition: background 0.3s, color 0.3s;
+    margin-left: 10px;
+  }
+  
+  .custom-button:hover {
+    background-color: #288598;
+    color: white;
+  }
+  

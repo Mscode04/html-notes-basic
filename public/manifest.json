@@ -1,0 +1,21 @@
+{
+    "short_name": "Palliative_Mkba",
+    "name": "Palliative-Mkba",
+    "icons": [
+      {
+        "src": "assets/logo192.png",
+        "sizes": "192x192",
+        "type": "image/png"
+      },
+      {
+        "src": "assets/logo512.png",
+        "sizes": "512x512",
+        "type": "image/png"
+      }
+    ],
+    "start_url": ".",
+    "background_color": "#0c454f",
+    "display": "standalone",
+    "theme_color": "#000000"
+  }
+  

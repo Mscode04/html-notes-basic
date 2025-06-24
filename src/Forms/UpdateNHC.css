@@ -1,0 +1,181 @@
+/* UpdateNHC.css */
+
+/* General container styling */
+.UpdateNHC-container {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 15px;
+  border-radius: 10px;
+  background-color: #a7d9e4;
+  font-family: Arial, sans-serif;
+
+}
+
+/* Back button styling */
+.UpdateNHC-back-btn {
+  background-color: transparent; /* Remove background color */
+  color: #288598; /* Use the primary color for text */
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  border-radius: 5px;
+  margin-bottom: 20px;
+  font-size: 16px;
+  text-decoration: underline; /* Add underline for better visibility */
+}
+
+.UpdateNHC-back-btn:hover {
+  color: #1a5c6b; /* Darker shade for hover */
+}
+
+/* Title styling */
+.UpdateNHC-title {
+  font-size: 24px;
+  margin-bottom: 20px;
+  color: #288598; /* Primary color for title */
+}
+
+/* Form styling */
+.UpdateNHC-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.UpdateNHC-form h3 {
+  font-size: 20px;
+  margin-top: 20px;
+  margin-bottom: 10px;
+  color: #288598; /* Primary color for section headings */
+}
+
+/* Label and input styling */
+.UpdateNHC-form label {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  font-size: 16px;
+  color: #333;
+}
+
+.UpdateNHC-form input,
+.UpdateNHC-form select,
+.UpdateNHC-form textarea {
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.UpdateNHC-form textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+/* Submit button styling */
+.UpdateNHC-submit-btn {
+  background-color: #288598; /* Primary color for submit button */
+  color: white;
+  border: none;
+  padding: 15px 20px;
+  cursor: pointer;
+  border-radius: 5px;
+  font-size: 18px;
+  margin-top: 20px;
+}
+
+.UpdateNHC-submit-btn:disabled {
+  background-color: #6c757d; /* Gray for disabled state */
+  cursor: not-allowed;
+}
+
+.UpdateNHC-submit-btn:hover:not(:disabled) {
+  background-color: #1a5c6b; /* Darker shade for hover */
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .UpdateNHC-container {
+    padding: 10px;
+  }
+
+  .UpdateNHC-title {
+    font-size: 20px;
+  }
+
+  .UpdateNHC-form h3 {
+    font-size: 18px;
+  }
+
+  .UpdateNHC-form label {
+    font-size: 14px;
+  }
+
+  .UpdateNHC-form input,
+  .UpdateNHC-form select,
+  .UpdateNHC-form textarea {
+    font-size: 14px;
+    padding: 8px;
+  }
+
+  .UpdateNHC-submit-btn {
+    padding: 12px 15px;
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .UpdateNHC-container {
+    padding: 5px;
+  }
+
+  .UpdateNHC-title {
+    font-size: 18px;
+  }
+
+  .UpdateNHC-form h3 {
+    font-size: 16px;
+  }
+
+  .UpdateNHC-form label {
+    font-size: 12px;
+  }
+
+  .UpdateNHC-form input,
+  .UpdateNHC-form select,
+  .UpdateNHC-form textarea {
+    font-size: 12px;
+    padding: 6px;
+  }
+
+  .UpdateNHC-submit-btn {
+    padding: 10px 12px;
+    font-size: 14px;
+  }
+}
+
+/* Vital signs row styling */
+.vital-signs-row {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.vital-signs-row label {
+  flex: 1 1 calc(33.333% - 10px);
+  min-width: 150px;
+}
+
+@media (max-width: 768px) {
+  .vital-signs-row label {
+    flex: 1 1 calc(50% - 10px);
+  }
+}
+
+@media (max-width: 480px) {
+  .vital-signs-row label {
+    flex: 1 1 100%;
+  }
+}

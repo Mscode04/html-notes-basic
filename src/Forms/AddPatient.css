@@ -1,0 +1,125 @@
+/* Base Styles */
+.AddPatient-container {
+  background-color: #288598;
+  padding: 20px;
+  min-height: 100vh;
+  color: #fff;
+}
+
+.AddPatient-backButton {
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 16px;
+  cursor: pointer;
+  margin-bottom: 20px;
+}
+
+.AddPatient-backButton:hover {
+  text-decoration: underline;
+}
+
+.AddPatient-title {
+  text-align: center;
+  margin-bottom: 30px;
+  font-size: 24px;
+}
+
+.AddPatient-form {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  color: #333;
+}
+
+.AddPatient-sectionTitle {
+  color: #288598;
+  margin-bottom: 20px;
+  font-size: 20px;
+}
+
+.AddPatient-row {
+  display: flex;
+  flex-direction: column; /* Stack fields vertically */
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.AddPatient-field {
+  width: 100%; /* Each field takes full width */
+  margin-bottom: 15px;
+}
+
+.AddPatient-field label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+  color: #288598;
+}
+
+.AddPatient-field input,
+.AddPatient-field textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.AddPatient-field textarea {
+  resize: vertical;
+}
+
+.AddPatient-submitButton {
+  background-color: #288598;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+  width: 100%;
+  margin-top: 20px;
+}
+
+.AddPatient-submitButton:hover {
+  background-color: #1f6a7a;
+}
+
+/* Toastify Notifications */
+.Toastify__toast--success {
+  background-color: #28a745 !important;
+}
+
+.Toastify__toast--error {
+  background-color: #dc3545 !important;
+}
+
+/* Family Details Section */
+.AddPatient-familyDetails {
+  margin-bottom: 20px;
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+}
+
+.AddPatient-familyDetails h5 {
+  margin-bottom: 10px;
+  color: #288598;
+}
+
+.AddPatient-addFamilyButton {
+  background-color: #288598;
+  color: #fff;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-bottom: 20px;
+}
+
+.AddPatient-addFamilyButton:hover {
+  background-color: #1f6a7a;
+}

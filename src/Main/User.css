@@ -1,0 +1,319 @@
+/* Container for the entire User component */
+.user-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #1e3a8a; /* Blue-900 */
+  color: white;
+  min-height: 100vh;
+}
+
+/* Header section with background image */
+.user-header {
+  width: 100%;
+  height: 33.33vh; 
+  background: url(https://shine365.marshfieldclinic.org/wp-content/uploads/2020/10/Palliative-Care-vs-Hospice_Inside.png);/* 1/3 of the viewport height */
+  background-size: cover;
+  background-position: center;
+  position: relative;
+}
+
+/* Overlay for the header */
+.user-header-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.242); /* Black with 50% opacity */
+}
+
+/* Title inside the header */
+.user-header-title {
+  font-size: 2.25rem; /* 36px */
+  font-weight: bold;
+  margin: 10px;
+}
+
+
+.user-profile-card {
+  background-color: white;
+  color: black;
+  
+  width: 91.6667%; /* 11/12 */
+  max-width: 32rem; /* 512px */
+  padding: 1.5rem; /* 24px */
+  margin-top: 50px;
+  border-radius: 1rem; /* 16px */
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+/* Content inside the profile card */
+.user-profile-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  
+}
+.user-profile-name{
+  color: black;
+  text-decoration: underline white !important;
+  
+}
+
+/* Profile picture container */
+.user-profile-picture {
+  width: 6rem; /* 96px */
+  height: 6rem; /* 96px */
+  border-radius: 9999px; /* Fully rounded */
+  background-color: #d1d5db; /* Gray-300 */
+  overflow: hidden;
+}
+
+/* Profile image */
+.user-profile-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Patient's name */
+.user-profile-name {
+  font-size: 1.5rem; /* 24px */
+  font-weight: 600;
+  margin-top: 1rem; /* 16px */
+}
+
+/* Contact section */
+.user-contact-section {
+  background-color: white;
+  width: 91.6667%; /* 11/12 */
+  max-width: 32rem; /* 512px */
+  margin-top: 1rem; /* 16px */
+  padding: 1rem; /* 16px */
+  border-radius: 1rem; /* 16px */
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+/* Title inside the contact section */
+.user-contact-title {
+  font-size: 1.25rem; /* 20px */
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 1rem; 
+  color: black;/* 16px */
+}
+
+/* List of contact items */
+.user-contact-list {
+  display: flex;
+  flex-direction: column;
+  
+  gap: 0.5rem; /* 8px */
+}
+
+/* Individual contact item */
+.user-contact-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #ffffff;
+  color: black; /* Blue-100 */
+  padding: 0.75rem; /* 12px */
+  border-radius: 0.5rem; /* 8px */
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+/* Contact info (avatar and name) */
+.user-contact-info {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem; /* 12px */
+}
+
+/* Avatar for contact */
+.user-contact-avatar {
+  width: 3rem; /* 48px */
+  height: 3rem; /* 48px */
+  border-radius: 9999px; /* Fully rounded */
+  background-color: #d1d5db; /* Gray-300 */
+  overflow: hidden;
+}
+
+/* Image inside the avatar */
+.user-contact-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Contact name */
+.user-contact-name {
+  font-size: 1.125rem; /* 18px */
+  font-weight: 500;
+}
+
+/* Call button */
+.user-contact-button {
+  color: #bb9892; /* Blue-500 */
+  transition: color 0.2s;
+
+}
+.user-contact-list a{
+  text-decoration: none;
+}
+.user-contact-button:hover {
+  color: #1d4ed8; /* Blue-700 */
+}
+
+/* Logout section */
+.user-logout-section {
+  margin-top: 1rem; /* 16px */
+}
+
+/* Logout button */
+.user-logout-button {
+  background-color: #dc2626; /* Red-600 */
+  color: white;
+  font-weight: bold;
+  padding: 0.5rem 1rem; /* 8px 16px */
+  border-radius: 0.375rem; /* 6px */
+  width: 91.6667%; /* 11/12 */
+  max-width: 32rem; /* 512px */
+  transition: background-color 0.2s;
+  margin-bottom: 50px;
+}
+
+.user-logout-button:hover {
+  background-color: #b91c1c; /* Red-700 */
+}
+/* Container for the About Palliative section */
+.about-palliative {
+  background-color: white;
+  width: 99%; /* 11/12 */
+  max-width: 34rem; /* 512px */
+   /* 16px */
+  padding: 1.5rem; /* 24px */
+  border-radius: 1rem; /* 16px */
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  text-align: center;
+  margin-bottom: 10px;
+  
+}
+
+/* Palliative image styling */
+.about-palliative img {
+  width: 100%; /* Adjust image size */
+  height: auto;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+/* Palliative text */
+.about-palliative a {
+  display: block;
+  font-size: 20px; /* 16px */
+  font-weight: 600;
+  color: #070f17; /* Blue */
+  text-decoration: none;
+  margin-top: 5px;
+}
+
+.about-palliative a:hover {
+  text-decoration: underline;
+}
+
+/* Footer section */
+.footer {
+  text-align: center;
+  margin-top: 20px;
+  padding: 10px;
+  background-color: #1e3a8a; /* Blue-900 */
+  color: white;
+  font-size: 0.9rem;
+}
+
+.footer a {
+  color: #ffdd57; /* Yellow accent */
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.footer a:hover {
+  text-decoration: underline;
+}
+
+
+
+/* Chatbot Button Styling */
+.user-chatbot-section {
+position: fixed;
+bottom: 20px;
+right: 20px;
+z-index: 1000;
+}
+
+.user-chatbot-button {
+background-color: #25d366; /* WhatsApp green color */
+color: white;
+border: none;
+border-radius: 50%;
+width: 50px;
+height: 50px;
+font-size: 24px;
+display: flex;
+align-items: center;
+justify-content: center;
+box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+cursor: pointer;
+transition: background-color 0.3s ease;
+overflow: hidden; /* Ensure text doesn't overflow */
+position: relative;
+}
+
+.user-chatbot-button:hover {
+background-color: #128c7e; /* Darker green on hover */
+}
+
+/* Icon and Text Styling */
+.chatbot-icon,
+.chatbot-text {
+position: absolute;
+top: 50%;
+left: 50%;
+transform: translate(-50%, -50%);
+opacity: 0;
+transition: opacity 0.5s ease;
+}
+
+.chatbot-icon {
+font-size: 24px;
+}
+
+.chatbot-text {
+font-size: 14px;
+font-weight: bold;
+white-space: nowrap;
+}
+
+/* Animation Keyframes */
+@keyframes blink {
+0%, 100% {
+  opacity: 1;
+}
+50% {
+  opacity: 0;
+}
+}
+
+/* Apply Animation to Icon and Text */
+.chatbot-icon {
+animation: blink 3s infinite;
+}
+
+.chatbot-text {
+animation: blink 3s infinite 1.5s; /* Delay by 1.5s to alternate */
+}

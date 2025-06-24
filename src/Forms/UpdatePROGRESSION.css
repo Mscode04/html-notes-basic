@@ -1,0 +1,162 @@
+/* General Styles */
+.UpdatePROGRESSION-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f5f5f5;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .UpdatePROGRESSION-back-button {
+    background: none;
+    border: none;
+    color: #288598;
+    font-size: 16px;
+    cursor: pointer;
+    margin-bottom: 20px;
+  }
+  
+  .UpdatePROGRESSION-back-button:hover {
+    text-decoration: underline;
+  }
+  
+  .UpdatePROGRESSION-title {
+    color: #288598;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .UpdatePROGRESSION-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .uprogression-section-title {
+    color: #1a5f6e;
+    font-size: 18px;
+    margin-bottom: 10px;
+    border-bottom: 2px solid #288598;
+    padding-bottom: 5px;
+  }
+  
+  .uprogression-field {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+  
+  .uprogression-field label {
+    color: #288598;
+    font-weight: bold;
+    font-size: 14px;
+  }
+  
+  .uprogression-field input,
+  .uprogression-field select,
+  .uprogression-field textarea {
+    padding: 8px;
+    border: 1px solid #288598;
+    border-radius: 5px;
+    font-size: 14px;
+    background-color: #fff;
+    color: #333;
+  }
+  
+  .uprogression-field input:focus,
+  .uprogression-field select:focus,
+  .uprogression-field textarea:focus {
+    outline: none;
+    border-color: #1a5f6e;
+    box-shadow: 0 0 5px rgba(40, 133, 152, 0.5);
+  }
+  
+  .uprogression-field textarea {
+    resize: vertical;
+    min-height: 100px;
+  }
+  
+  .UpdatePROGRESSION-update-button {
+    background-color: #288598;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 20px;
+    transition: background-color 0.3s ease;
+  }
+  
+  .UpdatePROGRESSION-update-button:hover {
+    background-color: #1a5f6e;
+  }
+  
+  /* Toast Notification Styles */
+  .Toastify__toast-container {
+    font-size: 14px;
+  }
+  
+  .Toastify__toast--success {
+    background-color: #288598;
+    color: white;
+  }
+  
+  .Toastify__toast--error {
+    background-color: #ff6b6b;
+    color: white;
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .UpdatePROGRESSION-container {
+      padding: 15px;
+    }
+  
+    .uprogression-section-title {
+      font-size: 16px;
+    }
+  
+    .uprogression-field label {
+      font-size: 12px;
+    }
+  
+    .uprogression-field input,
+    .uprogression-field select,
+    .uprogression-field textarea {
+      font-size: 12px;
+      padding: 6px;
+    }
+  
+    .UpdatePROGRESSION-update-button {
+      font-size: 14px;
+      padding: 8px 16px;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .UpdatePROGRESSION-container {
+      padding: 10px;
+    }
+  
+    .uprogression-section-title {
+      font-size: 14px;
+    }
+  
+    .uprogression-field label {
+      font-size: 11px;
+    }
+  
+    .uprogression-field input,
+    .uprogression-field select,
+    .uprogression-field textarea {
+      font-size: 11px;
+      padding: 5px;
+    }
+  
+    .UpdatePROGRESSION-update-button {
+      font-size: 12px;
+      padding: 6px 12px;
+    }
+  }

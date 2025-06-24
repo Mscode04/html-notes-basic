@@ -1,0 +1,97 @@
+/* General Styles */
+.UpdateDEATH-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f5f5f5;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .UpdateDEATH-back-button {
+    background: none;
+    border: none;
+    color: #288598;
+    font-size: 16px;
+    cursor: pointer;
+    margin-bottom: 20px;
+  }
+  
+  .UpdateDEATH-back-button:hover {
+    text-decoration: underline;
+  }
+  
+  .UpdateDEATH-title {
+    color: #288598;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .UpdateDEATH-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .UpdateDEATH-section-title {
+    color: #288598;
+    font-size: 18px;
+    margin-bottom: 10px;
+  }
+  
+  .UpdateDEATH-field {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+  
+  .UpdateDEATH-field label {
+    color: #288598;
+    font-weight: bold;
+  }
+  
+  .UpdateDEATH-field input,
+  .UpdateDEATH-field textarea,
+  .UpdateDEATH-field select {
+    padding: 8px;
+    border: 1px solid #288598;
+    border-radius: 4px;
+    font-size: 14px;
+  }
+  
+  .UpdateDEATH-field textarea {
+    resize: vertical;
+    min-height: 100px;
+  }
+  
+  .UpdateDEATH-update-button {
+    background-color: #288598;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 20px;
+  }
+  
+  .UpdateDEATH-update-button:hover {
+    background-color: #1f6a7a;
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .UpdateDEATH-container {
+      padding: 15px;
+    }
+  
+    .UpdateDEATH-field input,
+    .UpdateDEATH-field textarea,
+    .UpdateDEATH-field select {
+      font-size: 12px;
+    }
+  
+    .UpdateDEATH-update-button {
+      font-size: 14px;
+    }
+  }

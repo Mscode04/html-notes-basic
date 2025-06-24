@@ -1,0 +1,82 @@
+/* General App Styles */
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #288598;
+    color: white;
+  }
+  
+  .mainhome_app {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+  }
+  
+  /* Top Section */
+  .mainhome_top-section {
+    background-color: #20506b;
+    padding: 10px;
+    text-align: center;
+  }
+  
+  .mainhome_page-content {
+    flex: 1;
+    overflow-y: auto;
+    margin-bottom: 50px;
+  }
+  
+  /* Bottom Navigation Bar */
+  .mainhome_bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 60px;
+    background-color: #20506b;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.2);
+  }
+  
+  .mainhome_nav-item {
+    flex: 1;
+    text-align: center;
+    color: white;
+    text-decoration: none;
+    font-size: 14px;
+  }
+  
+  .mainhome_nav-item i {
+    font-size: 20px;
+  }
+  
+  .mainhome_nav-item:hover {
+    color: #ffffffb3;
+  }
+  
+  /* Floating Action Button (FAB) */
+  .mainhome_fab {
+    position: absolute;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 60px;
+    background-color: #ff4081;
+    border: none;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 24px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    cursor: pointer;
+  }
+  
+  .mainhome_fab:hover {
+    background-color: #ff6589;
+  }
+  
