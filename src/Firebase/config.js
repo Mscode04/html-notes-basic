@@ -3,13 +3,13 @@ import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyAvg80SUhF_bYfqxGrI9jeG3jupTFQSKH0",
-  authDomain: "palliative-app-version-1.firebaseapp.com",
-  projectId: "palliative-app-version-1",
-  storageBucket: "palliative-app-version-1.firebasestorage.app",
-  messagingSenderId: "606406902443",
-  appId: "1:606406902443:web:02076908304fd0f65e2dee",
-  measurementId: "G-BKED092BZT"
+  apiKey: "AIzaSyDQkLSLQXwUlnWULZY3djGfer6tTPEYCSo",
+  authDomain: "palliative-web.firebaseapp.com",
+  projectId: "palliative-web",
+  storageBucket: "palliative-web.firebasestorage.app",
+  messagingSenderId: "271871285310",
+  appId: "1:271871285310:web:9fc191edb1d9763719d96f",
+  measurementId: "G-FGHDCH3NZX"
 };
 
 const FirebaseApp = initializeApp(firebaseConfig);

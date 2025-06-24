@@ -1,106 +1,47 @@
-// src/App.js
 import React, { useState, useEffect } from "react";
-import { HashRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import LandingPage from "./Main/LandingPage";
 import LoginPage from "./Main/LoginPage";
 import Main from "./Main/Main";
-import User from "./Main/User";
-import Chatbot from "./Main/Chatbot";
-import PUser from "./Main/PUser";
-import Logout from "./Main/Logout";
+import Logout from "./Pages/Logout";
+import Dashboard from "./Pages/Dashboard";
+import Patients from "./Pages/Patients";
+import Appointments from "./Pages/Appointments";
+import Reports from "./Pages/Reports";
+import Settings from "./Pages/Settings";
+import Help from "./Pages/Help";
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(
     localStorage.getItem("isAuthenticated") === "true"
   );
-  const [isNurse, setIsNurse] = useState(
-    localStorage.getItem("isNurse") === "true"
-  );
-
-  useEffect(() => {
-    localStorage.setItem("isAuthenticated", isAuthenticated);
-    localStorage.setItem("isNurse", isNurse);
-  }, [isAuthenticated, isNurse]);
 
   const handleLogout = () => {
     setIsAuthenticated(false);
-    setIsNurse(false);
     localStorage.removeItem("isAuthenticated");
-    localStorage.removeItem("isNurse");
-    localStorage.removeItem("patientId");
   };
 
   return (
-    <>
+    
       <Routes>
-        {/* Landing Page - Always shown */}
-        <Route
-          path="/"
-          element={
-            <LandingPage 
-              isAuthenticated={isAuthenticated} 
-              isNurse={isNurse} 
-            />
-          }
-        />
-
-        {/* Login Page */}
-        <Route
-          path="/login"
-          element={
-            !isAuthenticated ? (
-              <LoginPage 
-                setIsAuthenticated={setIsAuthenticated} 
-                setIsNurse={setIsNurse} 
-              />
-            ) : (
-              <Navigate to="/" />
-            )
-          }
-        />
-
-        {/* Main Page (for nurses) */}
-        <Route
-          path="/main/*"
-          element={
-            isAuthenticated && isNurse ? (
-              <Main isAuthenticated={isAuthenticated} isNurse={isNurse} />
-            ) : (
-              <Navigate to="/" />
-            )
-          }
-        />
-
-        {/* User Page (for non-nurses) */}
-        <Route
-          path="/users/:patientId/*"
-          element={
-            isAuthenticated && !isNurse ? (
-              <User isAuthenticated={isAuthenticated} isNurse={isNurse} />
-            ) : (
-              <Navigate to="/" />
-            )
-          }
-        />
-
-        {/* PUser Route */}
-        <Route
-          path="/puser/:patientId"
-          element={<PUser />}
-        />
+        <Route path="/" element={<LandingPage isAuthenticated={isAuthenticated} />} />
+        <Route path="/login" element={!isAuthenticated ? <LoginPage setIsAuthenticated={setIsAuthenticated} /> : <Navigate to="/dashboard" />} />
+        <Route path="/logout" element={<Logout onLogout={handleLogout} />} />
         
-        <Route
-          path="/chatbot"
-          element={<Chatbot />}
-        />
+        {/* Protected routes */}
+        <Route path="/" element={<Main />}>
+          <Route path="dashboard" element={<Dashboard />} />
+          <Route path="patients" element={<Patients />} />
+          <Route path="appointments" element={<Appointments />} />
+          <Route path="reports" element={<Reports />} />
+          <Route path="settings" element={<Settings />} />
+          <Route path="help" element={<Help />} />
+        </Route>
 
-        {/* Logout Route */}
-        <Route
-          path="/logout"
-          element={<Logout onLogout={handleLogout} />}
-        />
+        {/* Redirect to dashboard if authenticated but invalid route */}
+        <Route path="*" element={isAuthenticated ? <Navigate to="/dashboard" /> : <Navigate to="/login" />} />
       </Routes>
-    </>
+   
   );
 }
 
