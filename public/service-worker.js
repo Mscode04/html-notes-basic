@@ -8,6 +8,7 @@ const filesToCache = [
   '/icons/icon-512x512.png',
 ];
 
+
 // Install Service Worker
 self.addEventListener('install', (event) => {
   event.waitUntil(
