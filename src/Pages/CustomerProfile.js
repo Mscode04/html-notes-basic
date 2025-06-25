@@ -1,220 +1,173 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { db } from "../Firebase/config";
 import { doc, getDoc, collection, query, where, getDocs } from "firebase/firestore";
-import { Container, Card, Button, Spinner, Alert, ListGroup, Badge, Table } from "react-bootstrap";
-import { useNavigate } from "react-router-dom";
+import { 
+  Typography, 
+  Paper, 
+  Box, 
+  Button, 
+  CircularProgress, 
+  Table,
+  List,
+  ListItem,
+  ListItemText,
+  Divider,
+  Chip
+} from "@mui/material";
 import { format } from 'date-fns';
 
 const CustomerProfile = () => {
-  const { id } = useParams(); // Firebase document ID
+  const { id, routeName } = useParams();
   const [customer, setCustomer] = useState(null);
   const [sales, setSales] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [salesLoading, setSalesLoading] = useState(true);
   const [error, setError] = useState(null);
-  const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchCustomerAndSales = async () => {
+    const fetchCustomerData = async () => {
       try {
-        // Fetch customer data
-        const docRef = doc(db, "customers", id);
-        const docSnap = await getDoc(docRef);
-        
-        if (!docSnap.exists()) {
+        // Fetch customer
+        const customerDoc = await getDoc(doc(db, "customers", id));
+        if (!customerDoc.exists()) {
           throw new Error("Customer not found");
         }
-
-        const customerData = {
-          firebaseId: docSnap.id,
-          ...docSnap.data()
-        };
-        setCustomer(customerData);
-
-        // Fetch sales for this customer
+        setCustomer({ id: customerDoc.id, ...customerDoc.data() });
+        
+        // Fetch sales
         const salesQuery = query(
           collection(db, "sales"),
-          where("customerId", "==", customerData.id) // Assuming you store customerId in sales
+          where("customerId", "==", customerDoc.data().id),
+          where("route", "==", routeName)
         );
-        
-        const querySnapshot = await getDocs(salesQuery);
-        const salesData = querySnapshot.docs.map(doc => ({
-          firebaseId: doc.id,
-          ...doc.data(),
-          date: doc.data().timestamp?.toDate() || new Date()
+        const salesSnapshot = await getDocs(salesQuery);
+        const salesData = salesSnapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data()
         }));
-
         setSales(salesData);
       } catch (err) {
-        console.error("Error fetching data: ", err);
-        setError(err.message || "Failed to load data");
+        console.error("Error fetching data:", err);
+        setError(err.message);
       } finally {
         setLoading(false);
-        setSalesLoading(false);
       }
     };
-
-    fetchCustomerAndSales();
-  }, [id]);
-
-  const handleGoBack = () => {
-    navigate("/customers");
-  };
-
-  const formatCurrency = (amount) => {
-    return new Intl.NumberFormat('en-IN', {
-      style: 'currency',
-      currency: 'INR',
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0
-    }).format(amount || 0);
-  };
-
-  const handleViewSale = (saleId) => {
-    navigate(`/sales/${saleId}`);
-  };
+    
+    fetchCustomerData();
+  }, [id, routeName]);
 
   if (loading) {
     return (
-      <Container className="d-flex justify-content-center align-items-center" style={{ height: '80vh' }}>
-        <Spinner animation="border" variant="primary" />
-      </Container>
+      <Box display="flex" justifyContent="center" alignItems="center" minHeight="200px">
+        <CircularProgress />
+      </Box>
     );
   }
 
   if (error) {
     return (
-      <Container className="mt-4">
-        <Alert variant="danger">{error}</Alert>
-        <Button variant="secondary" onClick={handleGoBack} className="mt-3">
-          Back to Customers
-        </Button>
-      </Container>
+      <Paper elevation={3} sx={{ p: 2, backgroundColor: 'error.light', color: 'white' }}>
+        {error}
+      </Paper>
     );
   }
 
   return (
-    <Container className="py-4">
+    <Box>
       <Button 
-        variant="outline-secondary" 
-        onClick={handleGoBack}
-        className="mb-4"
+        component={Link}
+        to={`/customers/${routeName}`}
+        variant="outlined"
+        sx={{ mb: 2 }}
       >
-        &larr; Back to All Customers
+        Back to Customers
       </Button>
-
-      {/* Customer Profile Card */}
-      <Card className="shadow-sm mb-4">
-        <Card.Header className="bg-primary text-white">
-          <div className="d-flex justify-content-between align-items-center">
-            <h3 className="mb-0">{customer.name}'s Profile</h3>
-            <div>
-              <Badge bg="light" text="dark" className="me-2">
-                ID: {customer.id || 'N/A'}
-              </Badge>
-              <Badge bg="light" text="primary">
-                Firebase ID: {customer.firebaseId.substring(0, 8)}...
-              </Badge>
-            </div>
-          </div>
-        </Card.Header>
+      
+      <Paper elevation={3} sx={{ p: 3, mb: 3 }}>
+        <Typography variant="h4" gutterBottom>
+          {customer.name}'s Profile
+        </Typography>
         
-        <Card.Body>
-          <ListGroup variant="flush">
-            <ListGroup.Item>
-              <strong>Name:</strong> {customer.name}
-            </ListGroup.Item>
-            <ListGroup.Item>
-              <strong>Organization:</strong> {customer.organization || 'N/A'}
-            </ListGroup.Item>
-            <ListGroup.Item>
-              <strong>Phone:</strong> {customer.phone}
-            </ListGroup.Item>
-            <ListGroup.Item>
-              <strong>Current Balance:</strong> {formatCurrency(customer.currentBalance)}
-            </ListGroup.Item>
-            <ListGroup.Item>
-              <strong>Current Gas On Hand:</strong> {customer.currentGasOnHand || 0}
-            </ListGroup.Item>
-          </ListGroup>
-        </Card.Body>
+        <List>
+          <ListItem>
+            <ListItemText primary="Phone" secondary={customer.phone} />
+          </ListItem>
+          <Divider />
+          <ListItem>
+            <ListItemText primary="Address" secondary={customer.address} />
+          </ListItem>
+          <Divider />
+          <ListItem>
+            <ListItemText 
+              primary="Current Balance" 
+              secondary={`₹${customer.currentBalance?.toLocaleString() || '0'}`} 
+            />
+          </ListItem>
+          <Divider />
+          <ListItem>
+            <ListItemText 
+              primary="Gas On Hand" 
+              secondary={customer.currentGasOnHand || '0'} 
+            />
+          </ListItem>
+        </List>
         
-        <Card.Footer className="bg-light">
-          <div className="d-flex justify-content-end gap-2">
-            <Button 
-              variant="primary"
-              onClick={() => navigate(`/customer/${customer.firebaseId}/edit`)}
-            >
-              Edit Profile
-            </Button>
-            <Button 
-              variant="success"
-              onClick={() => navigate(`/sales/new?customerId=${customer.id}`)}
-            >
-              New Sale
-            </Button>
-          </div>
-        </Card.Footer>
-      </Card>
-
-      {/* Sales History Section */}
-      <Card className="shadow-sm">
-        <Card.Header className="bg-secondary text-white">
-          <h4 className="mb-0">Sales History</h4>
-        </Card.Header>
-        <Card.Body>
-          {salesLoading ? (
-            <div className="d-flex justify-content-center">
-              <Spinner animation="border" variant="primary" />
-            </div>
-          ) : sales.length === 0 ? (
-            <Alert variant="info">No sales found for this customer</Alert>
-          ) : (
-            <div className="table-responsive">
-              <Table striped bordered hover>
-                <thead>
-                  <tr>
-                    <th>Date</th>
-                    <th>Sale ID</th>
-                    <th>Product</th>
-                    <th>Quantity</th>
-                    <th>Amount</th>
-                    <th>Received</th>
-                    <th>Balance</th>
-                    <th>Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {sales.map((sale) => (
-                    <tr key={sale.firebaseId}>
-                      <td>{format(sale.date, 'dd MMM yyyy')}</td>
-                      <td>{sale.id}</td>
-                      <td>{sale.productName}</td>
-                      <td>{sale.salesQuantity}</td>
-                      <td>{formatCurrency(sale.todayCredit)}</td>
-                      <td>{formatCurrency(sale.totalAmountReceived)}</td>
-                      <td className={sale.totalBalance > 0 ? 'text-danger' : 'text-success'}>
-                        {formatCurrency(sale.totalBalance)}
-                      </td>
-                      <td>
-                        <Button
-                          variant="outline-primary"
-                          size="sm"
-                          onClick={() => handleViewSale(sale.firebaseId)}
-                        >
-                          View
-                        </Button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </Table>
-            </div>
-          )}
-        </Card.Body>
-      </Card>
-    </Container>
+        <Box sx={{ display: 'flex', gap: 2, mt: 2 }}>
+          <Button 
+            variant="contained"
+            component={Link}
+            to={`/customer/edit/${customer.id}/${routeName}`}
+          >
+            Edit Profile
+          </Button>
+          <Button 
+            variant="contained"
+            color="success"
+            component={Link}
+            to={`/sales/new/${routeName}?customerId=${customer.id}`}
+          >
+            New Sale
+          </Button>
+        </Box>
+      </Paper>
+      
+      <Typography variant="h5" gutterBottom>
+        Sales History
+      </Typography>
+      
+      <Table>
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Sale ID</th>
+            <th>Product</th>
+            <th>Quantity</th>
+            <th>Amount</th>
+            <th>Received</th>
+            <th>Balance</th>
+          </tr>
+        </thead>
+        <tbody>
+          {sales.map(sale => (
+            <tr key={sale.id}>
+              <td>{format(sale.timestamp?.toDate(), 'dd MMM yyyy')}</td>
+              <td>{sale.id}</td>
+              <td>{sale.productName}</td>
+              <td>{sale.salesQuantity}</td>
+              <td>₹{sale.todayCredit?.toLocaleString()}</td>
+              <td>₹{sale.totalAmountReceived?.toLocaleString()}</td>
+              <td>
+                <Chip 
+                  label={`₹${sale.totalBalance?.toLocaleString()}`}
+                  color={sale.totalBalance > 0 ? 'error' : 'success'}
+                />
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </Table>
+    </Box>
   );
 };
 
