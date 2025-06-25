@@ -10,7 +10,15 @@ import Appointments from "./Pages/Appointments";
 import Reports from "./Pages/Reports";
 import Settings from "./Pages/Settings";
 import Help from "./Pages/Help";
-
+import Products from "./Components/Products";
+import Sales from "./Components/Sales";
+import NewConnection from "./Components/NewConnection";
+import Routess from "./Components/Routess";
+import AllCustomers from "./Pages/AllCustomers";
+import AllSales from "./Pages/AllSales";
+import SaleDetail from "./Pages/SaleDetail";
+import CustomerProfile from "./Pages/CustomerProfile";
+import Checkin from "./Pages/Checkin";
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(
     localStorage.getItem("isAuthenticated") === "true"
@@ -35,7 +43,17 @@ function App() {
           <Route path="appointments" element={<Appointments />} />
           <Route path="reports" element={<Reports />} />
           <Route path="settings" element={<Settings />} />
+          <Route path="new-connection" element={<NewConnection />} />
+          <Route path="sales" element={<Sales />} />
+          <Route path="routes" element={<Routess/>} />
+          <Route path="products" element={<Products />} />
           <Route path="help" element={<Help />} />
+          <Route path="check-in" element={<Checkin />} />
+          <Route path="all-customers" element={<AllCustomers />} />
+            <Route path="all-sales" element={<AllSales />} />
+<Route path="/customer/:id" element={<CustomerProfile />} />
+<Route path="/sales/:id" element={<SaleDetail />} />
+          
         </Route>
 
         {/* Redirect to dashboard if authenticated but invalid route */}
