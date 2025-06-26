@@ -19,6 +19,8 @@ import AllSales from "./Pages/AllSales";
 import SaleDetail from "./Pages/SaleDetail";
 import CustomerProfile from "./Pages/CustomerProfile";
 import Checkin from "./Pages/Checkin";
+import GasRequests from "./Pages/GasRequests";
+import UpdateSale from "./Components/UpdateSale";
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(
     localStorage.getItem("isAuthenticated") === "true"
@@ -49,10 +51,13 @@ function App() {
           <Route path="products" element={<Products />} />
           <Route path="help" element={<Help />} />
           <Route path="check-in" element={<Checkin />} />
+          <Route path="req" element={<GasRequests/>} />
+
           <Route path="all-customers" element={<AllCustomers />} />
             <Route path="all-sales" element={<AllSales />} />
 <Route path="/customer/:id" element={<CustomerProfile />} />
 <Route path="/sales/:id" element={<SaleDetail />} />
+<Route path="/sales/update/:id" element={<UpdateSale />} />
           
         </Route>
 

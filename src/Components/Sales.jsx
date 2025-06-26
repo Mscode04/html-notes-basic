@@ -120,88 +120,88 @@ const Sales = () => {
     }));
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  
+  if (!selectedCustomer) {
+    alert("Please select a customer");
+    return;
+  }
+
+  if (!selectedRoute) {
+    alert("Please select a route");
+    return;
+  }
+
+  if (formData.emptyQuantity > selectedCustomer.currentGasOnHand) {
+    alert(`Error: Empty quantity (${formData.emptyQuantity}) cannot be more than current gas on hand (${selectedCustomer.currentGasOnHand})`);
+    return;
+  }
+
+  try {
+    // Prepare complete sale data with only essential route information
+    const saleData = {
+      ...formData,
+      customerName: selectedCustomer.name,
+      customerPhone: selectedCustomer.phone,
+      customerAddress: selectedCustomer.address,
+      productName: selectedProduct.name,
+      productPrice: selectedProduct.price,
+      routeId: selectedRoute.id,          // Only route ID
+      routeName: selectedRoute.name,      // Only route name
+      timestamp: new Date()
+    };
+
+    // Remove the routeData object if it exists
+    delete saleData.routeData;
+
+    // Add sale to sales collection
+    await addDoc(collection(db, "sales"), saleData);
     
-    if (!selectedCustomer) {
-      alert("Please select a customer");
-      return;
-    }
-
-    if (!selectedRoute) {
-      alert("Please select a route");
-      return;
-    }
-
-    if (formData.emptyQuantity > selectedCustomer.currentGasOnHand) {
-      alert(`Error: Empty quantity (${formData.emptyQuantity}) cannot be more than current gas on hand (${selectedCustomer.currentGasOnHand})`);
-      return;
-    }
-
-    try {
-      // Prepare complete sale data
-      const saleData = {
-        ...formData,
-        customerName: selectedCustomer.name,
-        customerPhone: selectedCustomer.phone,
-        customerAddress: selectedCustomer.address,
-        productName: selectedProduct.name,
-        productPrice: selectedProduct.price,
-        routeName: selectedRoute.name,
-        timestamp: new Date()
-      };
-
-      // Add sale to sales collection
-      await addDoc(collection(db, "sales"), saleData);
+    // Update customer document
+    const customerDoc = customers.find(c => c.id === formData.customerId);
+    if (customerDoc) {
+      const customerQuery = query(
+        collection(db, "customers"),
+        where("id", "==", formData.customerId)
+      );
       
-      // Find the customer document to update
-      const customerDoc = customers.find(c => c.id === formData.customerId);
-      if (customerDoc) {
-        // Get reference to the customer document using its document ID
-        const customerQuery = query(
-          collection(db, "customers"),
-          where("id", "==", formData.customerId)
-        );
-        
-        const querySnapshot = await getDocs(customerQuery);
-        if (!querySnapshot.empty) {
-          // Update the first matching document (assuming customer IDs are unique)
-          const customerDocRef = querySnapshot.docs[0].ref;
-          await updateDoc(customerDocRef, {
-            currentBalance: formData.totalBalance,
-            currentGasOnHand: (selectedCustomer.currentGasOnHand || 0) - formData.emptyQuantity + formData.salesQuantity
-          });
-        } else {
-          throw new Error("Customer document not found");
-        }
+      const querySnapshot = await getDocs(customerQuery);
+      if (!querySnapshot.empty) {
+        const customerDocRef = querySnapshot.docs[0].ref;
+        await updateDoc(customerDocRef, {
+          currentBalance: formData.totalBalance,
+          currentGasOnHand: (selectedCustomer.currentGasOnHand || 0) - formData.emptyQuantity + formData.salesQuantity
+        });
       }
-      
-      alert("Sale recorded successfully!");
-      // Reset form
-      setFormData({
-        id: `TBG${new Date().toISOString().replace(/[-:T.]/g, "").slice(0, 14)}`,
-        customerId: "",
-        customerData: null,
-        productId: "",
-        productData: null,
-        routeId: "",
-        routeData: null,
-        salesQuantity: 0,
-        emptyQuantity: 0,
-        todayCredit: 0,
-        totalAmountReceived: 0,
-        totalBalance: 0,
-        previousBalance: 0,
-        date: new Date().toISOString().split('T')[0]
-      });
-      setSelectedProduct(null);
-      setSelectedCustomer(null);
-      setSelectedRoute(null);
-    } catch (error) {
-      console.error("Error adding document: ", error);
-      alert("Error recording sale: " + error.message);
     }
-  };
+    
+    alert("Sale recorded successfully!");
+    // Reset form
+    setFormData({
+      id: `TBG${new Date().toISOString().replace(/[-:T.]/g, "").slice(0, 14)}`,
+      customerId: "",
+      customerData: null,
+      productId: "",
+      productData: null,
+      routeId: "",
+      routeData: null,  // This can remain in form state but won't be saved
+      salesQuantity: 0,
+      emptyQuantity: 0,
+      todayCredit: 0,
+      totalAmountReceived: 0,
+      totalBalance: 0,
+      previousBalance: 0,
+      date: new Date().toISOString().split('T')[0]
+    });
+    setSelectedProduct(null);
+    setSelectedCustomer(null);
+    setSelectedRoute(null);
+  } catch (error) {
+    console.error("Error adding document: ", error);
+    alert("Error recording sale: " + error.message);
+  }
+};
 
   return (
     <div className="form-container">

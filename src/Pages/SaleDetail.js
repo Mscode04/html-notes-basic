@@ -1,15 +1,21 @@
 import React, { useState, useEffect } from "react";
 import { db } from "../Firebase/config";
-import { doc, getDoc } from "firebase/firestore";
+import { doc, getDoc, deleteDoc, updateDoc,query,collection,getDocs,where } from "firebase/firestore";
 import { useNavigate, useParams } from "react-router-dom";
-import { Container, Card, Button, Spinner, Alert, Badge, Row, Col } from "react-bootstrap";
+import { Container, Card, Button, Spinner, Alert, Badge, Row, Col, Modal, Form, Toast } from "react-bootstrap";
 import { format } from 'date-fns';
+import { PDFDownloadLink } from '@react-pdf/renderer';
+import SaleReceiptPDF from "./SaleReceiptPDF"; // We'll create this component
 
 const SaleDetail = () => {
-  const { id } = useParams(); // This should be the Firestore document ID
+  const { id } = useParams();
   const [sale, setSale] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [pin, setPin] = useState("");
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -27,13 +33,8 @@ const SaleDetail = () => {
         }
 
         const saleData = docSnap.data();
-        // Ensure we have all required fields
-        if (!saleData.id || !saleData.customerName || !saleData.productName) {
-          console.warn("Sale document is missing required fields:", saleData);
-        }
-
         setSale({
-          firebaseId: docSnap.id, // Store Firestore document ID
+          firebaseId: docSnap.id,
           ...saleData,
           date: saleData.timestamp?.toDate() || new Date(saleData.date || new Date())
         });
@@ -57,6 +58,45 @@ const SaleDetail = () => {
     }).format(amount || 0);
   };
 
+  const handleDelete = async () => {
+    if (pin !== "1234") {
+      setToastMessage("Invalid PIN");
+      setShowToast(true);
+      return;
+    }
+
+    try {
+      // First get the customer to update their balance
+      const customerQuery = query(
+        collection(db, "customers"),
+        where("id", "==", sale.customerId)
+      );
+      const customerSnapshot = await getDocs(customerQuery);
+      
+      if (!customerSnapshot.empty) {
+        const customerDoc = customerSnapshot.docs[0];
+        const customerData = customerDoc.data();
+        
+        // Revert the customer balance and gas on hand
+        await updateDoc(customerDoc.ref, {
+          currentBalance: customerData.currentBalance - sale.todayCredit + sale.totalAmountReceived,
+          currentGasOnHand: customerData.currentGasOnHand + sale.emptyQuantity - sale.salesQuantity
+        });
+      }
+
+      // Then delete the sale
+      await deleteDoc(doc(db, "sales", id));
+      
+      setToastMessage("Sale deleted successfully");
+      setShowToast(true);
+      setTimeout(() => navigate('/sales'), 1500);
+    } catch (err) {
+      console.error("Error deleting sale:", err);
+      setToastMessage("Failed to delete sale");
+      setShowToast(true);
+    }
+  };
+
   if (loading) {
     return (
       <Container className="d-flex justify-content-center align-items-center" style={{ height: '80vh' }}>
@@ -64,7 +104,13 @@ const SaleDetail = () => {
       </Container>
     );
   }
-
+const shopDetails = {
+  name: "Your Shop Name",
+  address: "Shop Address, City, State - PIN",
+  phone: "1234567890",
+  gst: "GSTIN123456789",
+  footerNote: "Goods once sold will not be taken back"
+};
   if (error) {
     return (
       <Container className="mt-4">
@@ -99,6 +145,19 @@ const SaleDetail = () => {
 
   return (
     <Container className="py-4">
+      <Toast 
+        show={showToast} 
+        onClose={() => setShowToast(false)} 
+        delay={3000} 
+        autohide
+        className="position-fixed top-0 end-0 m-3"
+      >
+        <Toast.Header>
+          <strong className="me-auto">Notification</strong>
+        </Toast.Header>
+        <Toast.Body>{toastMessage}</Toast.Body>
+      </Toast>
+
       <Button 
         variant="outline-secondary" 
         onClick={() => navigate('/sales')} 
@@ -106,6 +165,31 @@ const SaleDetail = () => {
       >
         &larr; Back to All Sales
       </Button>
+
+      <div className="d-flex justify-content-end gap-2 mb-3">
+        <Button 
+          variant="warning" 
+          onClick={() => navigate(`/sales/update/${sale.firebaseId}`)}
+        >
+          Update Sale
+        </Button>
+        <Button 
+          variant="danger" 
+          onClick={() => setShowDeleteModal(true)}
+        >
+          Delete Sale
+        </Button>
+        <PDFDownloadLink
+          document={<SaleReceiptPDF sale={sale} shopDetails={shopDetails} />}
+          fileName={`Sale_${sale.id}.pdf`}
+        >
+          {({ loading }) => (
+            <Button variant="primary" disabled={loading}>
+              {loading ? 'Generating PDF...' : 'Download PDF'}
+            </Button>
+          )}
+        </PDFDownloadLink>
+      </div>
 
       <Card className="shadow-sm mb-4">
         <Card.Header className="bg-primary text-white d-flex justify-content-between align-items-center">
@@ -124,13 +208,16 @@ const SaleDetail = () => {
               <p><strong>Product:</strong> {sale.productName || 'N/A'} ({formatCurrency(sale.productPrice)})</p>
               <p><strong>Quantity:</strong> {sale.salesQuantity || 0}</p>
               <p><strong>Empty Cylinders:</strong> {sale.emptyQuantity || 0}</p>
+              <p><strong>Route:</strong> {sale.routeName || 'N/A'}</p>
             </Col>
             <Col md={6}>
               <h5>Customer Information</h5>
               <hr />
               <p><strong>Name:</strong> {sale.customerName || 'N/A'}</p>
               <p><strong>Phone:</strong> {sale.customerPhone || 'N/A'}</p>
-              <p><strong>Address:</strong> {sale.customerAddress || 'N/A'}</p>
+              <p><strong>Address:</strong> {sale.customerAddress || sale.customerData?.address || 'N/A'}</p>
+              <p><strong>Organization:</strong> {sale.customerData?.organization || 'N/A'}</p>
+              <p><strong>Owner Name:</strong> {sale.customerData?.ownerName || 'N/A'}</p>
             </Col>
           </Row>
 
@@ -140,6 +227,7 @@ const SaleDetail = () => {
               <hr />
               <p><strong>Total Amount:</strong> {formatCurrency(sale.todayCredit)}</p>
               <p><strong>Amount Paid:</strong> {formatCurrency(sale.totalAmountReceived)}</p>
+              <p><strong>Payment Method:</strong> {sale.paymentMethod || 'Cash'}</p>
             </Col>
             <Col md={6}>
               <h5>Balance Information</h5>
@@ -151,15 +239,41 @@ const SaleDetail = () => {
                   {formatCurrency(sale.totalBalance)}
                 </Badge>
               </p>
+              <p><strong>Current Gas On Hand:</strong> {sale.customerData?.currentGasOnHand || 'N/A'}</p>
             </Col>
           </Row>
         </Card.Body>
         <Card.Footer className="d-flex justify-content-end">
-          <Button variant="primary" onClick={() => window.print()}>
+          {/* <Button variant="primary" onClick={() => window.print()}>
             Print Receipt
-          </Button>
+          </Button> */}
         </Card.Footer>
       </Card>
+
+      {/* Delete Confirmation Modal */}
+      <Modal show={showDeleteModal} onHide={() => setShowDeleteModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Confirm Deletion</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <p>Are you sure you want to delete this sale? This action cannot be undone.</p>
+          <p>Enter PIN to confirm:</p>
+          <Form.Control
+            type="password"
+            value={pin}
+            onChange={(e) => setPin(e.target.value)}
+            placeholder="Enter PIN (1234)"
+          />
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowDeleteModal(false)}>
+            Cancel
+          </Button>
+          <Button variant="danger" onClick={handleDelete}>
+            Delete Sale
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </Container>
   );
 };
