@@ -11,13 +11,15 @@ import {
   Paper, 
   Typography,
   Box,
-  CircularProgress
+  TablePagination
 } from '@mui/material';
 
 function Checkin() {
   const [sessions, setSessions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
 
   useEffect(() => {
     const fetchSessions = async () => {
@@ -47,10 +49,23 @@ function Checkin() {
     fetchSessions();
   }, []);
 
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+
   if (loading) {
     return (
       <Box display="flex" justifyContent="center" alignItems="center" minHeight="200px">
-        <CircularProgress />
+        <img
+          src="https://cdn.pixabay.com/animation/2023/10/08/03/19/03-19-26-213_512.gif"
+          alt="Loading..."
+          style={{ width: '150px', height: '150px' }}
+        />
       </Box>
     );
   }
@@ -62,6 +77,10 @@ function Checkin() {
       </Typography>
     );
   }
+
+  // Avoid a layout jump when reaching the last page with empty rows.
+  const emptyRows =
+    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - sessions.length) : 0;
 
   return (
     <div style={{ padding: '20px' }}>
@@ -83,22 +102,24 @@ function Checkin() {
           </TableHead>
           <TableBody>
             {sessions.length > 0 ? (
-              sessions.map((session) => (
-                <TableRow key={session.id} hover>
-                  <TableCell>{session.routeId}</TableCell>
-                  <TableCell>{session.routeName}</TableCell>
-                  <TableCell>{session.loginTime}</TableCell>
-                  <TableCell>{session.logoutTime}</TableCell>
-                  <TableCell>{session.date}</TableCell>
-                  <TableCell>
-                    {session.logoutTime === 'Still logged in' ? (
-                      <span style={{ color: 'green', fontWeight: 'bold' }}>Active</span>
-                    ) : (
-                      <span style={{ color: 'gray' }}>Completed</span>
-                    )}
-                  </TableCell>
-                </TableRow>
-              ))
+              sessions
+                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                .map((session) => (
+                  <TableRow key={session.id} hover>
+                    <TableCell>{session.routeId}</TableCell>
+                    <TableCell>{session.routeName}</TableCell>
+                    <TableCell>{session.loginTime}</TableCell>
+                    <TableCell>{session.logoutTime}</TableCell>
+                    <TableCell>{session.date}</TableCell>
+                    <TableCell>
+                      {session.logoutTime === 'Still logged in' ? (
+                        <span style={{ color: 'green', fontWeight: 'bold' }}>Active</span>
+                      ) : (
+                        <span style={{ color: 'gray' }}>Completed</span>
+                      )}
+                    </TableCell>
+                  </TableRow>
+                ))
             ) : (
               <TableRow>
                 <TableCell colSpan={6} align="center">
@@ -106,8 +127,22 @@ function Checkin() {
                 </TableCell>
               </TableRow>
             )}
+            {emptyRows > 0 && (
+              <TableRow style={{ height: 53 * emptyRows }}>
+                <TableCell colSpan={6} />
+              </TableRow>
+            )}
           </TableBody>
         </Table>
+        <TablePagination
+          rowsPerPageOptions={[5, 10, 25]}
+          component="div"
+          count={sessions.length}
+          rowsPerPage={rowsPerPage}
+          page={page}
+          onPageChange={handleChangePage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+        />
       </TableContainer>
     </div>
   );

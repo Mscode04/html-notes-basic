@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { Box } from '@mui/material';
 // import "./Logout.css";
 
 const Logout = ({ onLogout }) => {
@@ -26,11 +27,14 @@ const Logout = ({ onLogout }) => {
 
   return (
     <div className="logout-container">
-      <div className="logout-content">
-        <div className="spinner"></div>
-        <h2>Logging Out...</h2>
-        <p>You're being securely logged out of the system.</p>
-      </div>
+    <Box display="flex" justifyContent="center" alignItems="center" minHeight="200px">
+      <h1 className="text-center text-danger">Logging Out.....</h1>
+      <img
+        src="https://cdn-icons-gif.flaticon.com/14625/14625568.gif"
+        alt="Loading..."
+        style={{ width: '350px', height: '350px' }}
+      />
+    </Box>
     </div>
   );
 };

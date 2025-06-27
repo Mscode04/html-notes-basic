@@ -1,6 +1,6 @@
 {
-    "short_name": "Palliative_Mkba",
-    "name": "Palliative-Mkba",
+    "short_name": "TBG Admin",
+    "name": "TBG Admin",
     "icons": [
       {
         "src": "assets/logo192.png",
@@ -14,7 +14,7 @@
       }
     ],
     "start_url": ".",
-    "background_color": "#0c454f",
+    "background_color": "#201c5f",
     "display": "standalone",
     "theme_color": "#000000"
   }

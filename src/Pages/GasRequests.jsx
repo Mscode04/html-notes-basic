@@ -11,7 +11,6 @@ import {
   Paper, 
   Typography,
   Box,
-  CircularProgress
 } from '@mui/material';
 
 function GasRequests() {
@@ -46,13 +45,17 @@ function GasRequests() {
     fetchRequests();
   }, []);
 
-  if (loading) {
-    return (
-      <Box display="flex" justifyContent="center" alignItems="center" minHeight="200px">
-        <CircularProgress />
-      </Box>
-    );
-  }
+if (loading) {
+  return (
+    <Box display="flex" justifyContent="center" alignItems="center" minHeight="200px">
+      <img
+        src="https://cdn.pixabay.com/animation/2023/10/08/03/19/03-19-26-213_512.gif"
+        alt="Loading..."
+        style={{ width: '150px', height: '150px' }}
+      />
+    </Box>
+  );
+}
 
   if (error) {
     return (

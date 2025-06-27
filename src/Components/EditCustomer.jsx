@@ -1,100 +1,110 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { collection, addDoc, getDocs } from "firebase/firestore";
+import { useParams, useNavigate } from "react-router-dom";
+import { doc, getDoc, updateDoc, collection, getDocs } from "firebase/firestore";
 import { db } from "../Firebase/config";
-import { ToastContainer, toast } from 'react-toastify';
+import { Box } from '@mui/material';
+import { toast, ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
+import './EditCustomer.css';
 
-
-const NewConnection = () => {
+const EditCustomer = () => {
+  const { id } = useParams();
   const navigate = useNavigate();
   const [routes, setRoutes] = useState([]);
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
     id: "",
     name: "",
+    address: "",
     organization: "",
     phone: "",
-    address: "",
     ownerName: "",
     ownerPhone: "",
     password: "",
     route: "",
     currentBalance: 0
   });
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Generate initial ID
-    setFormData(prev => ({ ...prev, id: "00001" }));
-    
     // Fetch routes for dropdown
-    const fetchRoutes = async () => {
+    const fetchData = async () => {
       try {
-        const querySnapshot = await getDocs(collection(db, "routes"));
-        const routesData = querySnapshot.docs.map(doc => ({
+        // Fetch customer data
+        const customerDoc = await getDoc(doc(db, "customers", id));
+        if (customerDoc.exists()) {
+          setFormData(customerDoc.data());
+        } else {
+          toast.error("Customer not found");
+          navigate("/");
+        }
+
+        // Fetch routes
+        const routesSnapshot = await getDocs(collection(db, "routes"));
+        const routesData = routesSnapshot.docs.map(doc => ({
           id: doc.id,
           ...doc.data()
         }));
         setRoutes(routesData);
       } catch (error) {
-        toast.error("Failed to load routes");
-        console.error("Error fetching routes: ", error);
+        console.error("Error fetching data: ", error);
+        toast.error("Error loading customer data");
+      } finally {
+        setLoading(false);
       }
     };
-    
-    fetchRoutes();
-  }, []);
 
-  const generatePassword = (phone) => {
-    const randomChars = phone?.slice(-4) + "@tbgmkba";
-    return randomChars;
-  };
+    fetchData();
+  }, [id, navigate]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
-      [name]: value,
-      ...(name === "phone" && { password: generatePassword(value) })
+      [name]: value
     }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setIsSubmitting(true);
-    
     try {
-      await addDoc(collection(db, "customers"), formData);
-      toast.success("Customer added successfully!", {
-        onClose: () => navigate("/all-customers"),
-        autoClose: 3000
-      });
-      
-      // Reset form with new ID
-      const newId = String(parseInt(formData.id) + 1).padStart(5, '0');
-      setFormData({
-        id: newId,
-        name: "",
-        organization: "",
-        phone: "",
-        address: "",
-        ownerName: "",
-        ownerPhone: "",
-        password: "",
-        route: "",
-        currentBalance: 0
+      await updateDoc(doc(db, "customers", id), formData);
+      toast.success("Customer updated successfully!", {
+        autoClose: 2000,
+        onClose: () => navigate("/all-customers")
       });
     } catch (error) {
-      toast.error("Error adding customer: " + error.message);
-      console.error("Error adding document: ", error);
-    } finally {
-      setIsSubmitting(false);
+      console.error("Error updating document: ", error);
+      toast.error("Error updating customer");
     }
   };
 
+if (loading) {
+  return (
+    <Box display="flex" justifyContent="center" alignItems="center" minHeight="200px">
+      <img
+        src="https://cdn.pixabay.com/animation/2023/10/08/03/19/03-19-26-213_512.gif"
+        alt="Loading..."
+        style={{ width: '150px', height: '150px' }}
+      />
+    </Box>
+  );
+}
+
   return (
     <div className="form-container">
-      <h2>New Connection</h2>
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
+      
+      <h2>Edit Connection</h2>
       <form onSubmit={handleSubmit}>
         <div className="form-group">
           <label>ID:</label>
@@ -104,7 +114,7 @@ const NewConnection = () => {
             value={formData.id}
             onChange={handleChange}
             required
-            readOnly
+            disabled
           />
         </div>
         
@@ -116,6 +126,16 @@ const NewConnection = () => {
             value={formData.name}
             onChange={handleChange}
             required
+          />
+        </div>
+        
+        <div className="form-group">
+          <label>Address:</label>
+          <input
+            type="text"
+            name="address"
+            value={formData.address}
+            onChange={handleChange}
           />
         </div>
         
@@ -137,16 +157,7 @@ const NewConnection = () => {
             value={formData.phone}
             onChange={handleChange}
             required
-          />
-        </div>
-        
-        <div className="form-group">
-          <label>Address:</label>
-          <textarea
-            name="address"
-            value={formData.address}
-            onChange={handleChange}
-            rows="3"
+            disabled
           />
         </div>
         
@@ -171,12 +182,14 @@ const NewConnection = () => {
         </div>
         
         <div className="form-group">
-          <label>Password (Auto-generated):</label>
+          <label>Password:</label>
           <input
             type="text"
             name="password"
             value={formData.password}
-            readOnly
+            onChange={handleChange}
+            required
+            disabled
           />
         </div>
         
@@ -185,6 +198,7 @@ const NewConnection = () => {
           <select
             name="route"
             value={formData.route}
+            className="form-control"
             onChange={handleChange}
             required
           >
@@ -208,28 +222,19 @@ const NewConnection = () => {
           />
         </div>
         
+        <button type="submit" className="submit-btn btn-warning text-ligh text-center">
+          Update
+        </button>
         <button 
-          type="submit" 
-          className="submit-btn"
-          disabled={isSubmitting}
+          type="button" 
+          className="cancel-btn"
+          onClick={() => navigate(-1)}
         >
-          {isSubmitting ? 'Saving...' : 'Save Connection'}
+          Cancel
         </button>
       </form>
-      
-      <ToastContainer
-        position="top-right"
-        autoClose={3000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-      />
     </div>
   );
 };
 
-export default NewConnection;
+export default EditCustomer;

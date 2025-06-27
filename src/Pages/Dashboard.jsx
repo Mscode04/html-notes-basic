@@ -8,6 +8,7 @@ import {
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import "./Dashboard.css";
+import { Box } from '@mui/material';
 
 const Dashboard = () => {
   const [salesData, setSalesData] = useState([]);
@@ -140,14 +141,17 @@ const Dashboard = () => {
       amountReceived: sale.totalAmountReceived || 0
     }));
 
-  if (loading) {
-    return (
-      <div className="dashboard-loading">
-        <div className="spinner"></div>
-        <p>Loading dashboard data...</p>
-      </div>
-    );
-  }
+if (loading) {
+  return (
+    <Box display="flex" justifyContent="center" alignItems="center" minHeight="200px">
+      <img
+        src="https://cdn.pixabay.com/animation/2023/10/08/03/19/03-19-26-213_512.gif"
+        alt="Loading..."
+        style={{ width: '150px', height: '150px' }}
+      />
+    </Box>
+  );
+}
 
   return (
     <div className="dashboard-container">

@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { collection, addDoc, getDocs, query, where, updateDoc } from "firebase/firestore";
 import { db } from "../Firebase/config";
+import Select from 'react-select';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Sales = () => {
   const [customers, setCustomers] = useState([]);
@@ -28,29 +31,33 @@ const Sales = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      // Fetch customers
-      const customersSnapshot = await getDocs(collection(db, "customers"));
-      const customersData = customersSnapshot.docs.map(doc => ({
-        docId: doc.id,
-        ...doc.data()
-      }));
-      setCustomers(customersData);
-      
-      // Fetch products
-      const productsSnapshot = await getDocs(collection(db, "products"));
-      const productsData = productsSnapshot.docs.map(doc => ({
-        docId: doc.id,
-        ...doc.data()
-      }));
-      setProducts(productsData);
-      
-      // Fetch routes
-      const routesSnapshot = await getDocs(collection(db, "routes"));
-      const routesData = routesSnapshot.docs.map(doc => ({
-        docId: doc.id,
-        ...doc.data()
-      }));
-      setRoutes(routesData);
+      try {
+        // Fetch customers
+        const customersSnapshot = await getDocs(collection(db, "customers"));
+        const customersData = customersSnapshot.docs.map(doc => ({
+          docId: doc.id,
+          ...doc.data()
+        }));
+        setCustomers(customersData);
+        
+        // Fetch products
+        const productsSnapshot = await getDocs(collection(db, "products"));
+        const productsData = productsSnapshot.docs.map(doc => ({
+          docId: doc.id,
+          ...doc.data()
+        }));
+        setProducts(productsData);
+        
+        // Fetch routes
+        const routesSnapshot = await getDocs(collection(db, "routes"));
+        const routesData = routesSnapshot.docs.map(doc => ({
+          docId: doc.id,
+          ...doc.data()
+        }));
+        setRoutes(routesData);
+      } catch (error) {
+        toast.error(`Error fetching data: ${error.message}`);
+      }
     };
     
     fetchData();
@@ -120,92 +127,136 @@ const Sales = () => {
     }));
   };
 
-const handleSubmit = async (e) => {
-  e.preventDefault();
-  
-  if (!selectedCustomer) {
-    alert("Please select a customer");
-    return;
-  }
+  const handleCustomerChange = (selectedOption) => {
+    setFormData(prev => ({
+      ...prev,
+      customerId: selectedOption ? selectedOption.value : "",
+      customerData: selectedOption ? selectedOption.data : null
+    }));
+  };
 
-  if (!selectedRoute) {
-    alert("Please select a route");
-    return;
-  }
+  const handleProductChange = (selectedOption) => {
+    setFormData(prev => ({
+      ...prev,
+      productId: selectedOption ? selectedOption.value : "",
+      productData: selectedOption ? selectedOption.data : null
+    }));
+  };
 
-  if (formData.emptyQuantity > selectedCustomer.currentGasOnHand) {
-    alert(`Error: Empty quantity (${formData.emptyQuantity}) cannot be more than current gas on hand (${selectedCustomer.currentGasOnHand})`);
-    return;
-  }
+  const handleRouteChange = (selectedOption) => {
+    setFormData(prev => ({
+      ...prev,
+      routeId: selectedOption ? selectedOption.value : "",
+      routeData: selectedOption ? selectedOption.data : null
+    }));
+  };
 
-  try {
-    // Prepare complete sale data with only essential route information
-    const saleData = {
-      ...formData,
-      customerName: selectedCustomer.name,
-      customerPhone: selectedCustomer.phone,
-      customerAddress: selectedCustomer.address,
-      productName: selectedProduct.name,
-      productPrice: selectedProduct.price,
-      routeId: selectedRoute.id,          // Only route ID
-      routeName: selectedRoute.name,      // Only route name
-      timestamp: new Date()
-    };
-
-    // Remove the routeData object if it exists
-    delete saleData.routeData;
-
-    // Add sale to sales collection
-    await addDoc(collection(db, "sales"), saleData);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     
-    // Update customer document
-    const customerDoc = customers.find(c => c.id === formData.customerId);
-    if (customerDoc) {
-      const customerQuery = query(
-        collection(db, "customers"),
-        where("id", "==", formData.customerId)
-      );
-      
-      const querySnapshot = await getDocs(customerQuery);
-      if (!querySnapshot.empty) {
-        const customerDocRef = querySnapshot.docs[0].ref;
-        await updateDoc(customerDocRef, {
-          currentBalance: formData.totalBalance,
-          currentGasOnHand: (selectedCustomer.currentGasOnHand || 0) - formData.emptyQuantity + formData.salesQuantity
-        });
-      }
+    if (!selectedCustomer) {
+      toast.error("Please select a customer");
+      return;
     }
-    
-    alert("Sale recorded successfully!");
-    // Reset form
-    setFormData({
-      id: `TBG${new Date().toISOString().replace(/[-:T.]/g, "").slice(0, 14)}`,
-      customerId: "",
-      customerData: null,
-      productId: "",
-      productData: null,
-      routeId: "",
-      routeData: null,  // This can remain in form state but won't be saved
-      salesQuantity: 0,
-      emptyQuantity: 0,
-      todayCredit: 0,
-      totalAmountReceived: 0,
-      totalBalance: 0,
-      previousBalance: 0,
-      date: new Date().toISOString().split('T')[0]
-    });
-    setSelectedProduct(null);
-    setSelectedCustomer(null);
-    setSelectedRoute(null);
-  } catch (error) {
-    console.error("Error adding document: ", error);
-    alert("Error recording sale: " + error.message);
-  }
-};
+
+    if (!selectedRoute) {
+      toast.error("Please select a route");
+      return;
+    }
+
+    if (formData.emptyQuantity > selectedCustomer.currentGasOnHand) {
+      toast.error(`Empty quantity (${formData.emptyQuantity}) cannot be more than current gas on hand (${selectedCustomer.currentGasOnHand})`);
+      return;
+    }
+
+    try {
+      // Prepare complete sale data with only essential route information
+      const saleData = {
+        ...formData,
+        customerName: selectedCustomer.name,
+        customerPhone: selectedCustomer.phone,
+        customerAddress: selectedCustomer.address,
+        productName: selectedProduct.name,
+        productPrice: selectedProduct.price,
+        routeId: selectedRoute.id,
+        routeName: selectedRoute.name,
+        timestamp: new Date()
+      };
+
+      // Remove the routeData object if it exists
+      delete saleData.routeData;
+
+      // Add sale to sales collection
+      await addDoc(collection(db, "sales"), saleData);
+      
+      // Update customer document
+      const customerDoc = customers.find(c => c.id === formData.customerId);
+      if (customerDoc) {
+        const customerQuery = query(
+          collection(db, "customers"),
+          where("id", "==", formData.customerId)
+        );
+        
+        const querySnapshot = await getDocs(customerQuery);
+        if (!querySnapshot.empty) {
+          const customerDocRef = querySnapshot.docs[0].ref;
+          await updateDoc(customerDocRef, {
+            currentBalance: formData.totalBalance,
+            currentGasOnHand: (selectedCustomer.currentGasOnHand || 0) - formData.emptyQuantity + formData.salesQuantity
+          });
+        }
+      }
+      
+      toast.success("Sale recorded successfully!");
+      // Reset form
+      setFormData({
+        id: `TBG${new Date().toISOString().replace(/[-:T.]/g, "").slice(0, 14)}`,
+        customerId: "",
+        customerData: null,
+        productId: "",
+        productData: null,
+        routeId: "",
+        routeData: null,
+        salesQuantity: 0,
+        emptyQuantity: 0,
+        todayCredit: 0,
+        totalAmountReceived: 0,
+        totalBalance: 0,
+        previousBalance: 0,
+        date: new Date().toISOString().split('T')[0]
+      });
+      setSelectedProduct(null);
+      setSelectedCustomer(null);
+      setSelectedRoute(null);
+    } catch (error) {
+      console.error("Error adding document: ", error);
+      toast.error("Error recording sale: " + error.message);
+    }
+  };
+
+  // Prepare options for select components
+  const customerOptions = customers.map(customer => ({
+    value: customer.id,
+    label: `${customer.name} (${customer.phone}) - Balance: ₹${customer.currentBalance || 0}`,
+    data: customer
+  }));
+
+  const productOptions = products.map(product => ({
+    value: product.id,
+    label: `${product.name} (₹${product.price})`,
+    data: product
+  }));
+
+  const routeOptions = routes.map(route => ({
+    value: route.id,
+    label: route.name,
+    data: route
+  }));
 
   return (
     <div className="form-container">
       <h2>New Sales</h2>
+      <ToastContainer position="top-right" autoClose={5000} />
       <form onSubmit={handleSubmit}>
         <div className="form-group">
           <label>Sale ID:</label>
@@ -230,36 +281,26 @@ const handleSubmit = async (e) => {
         
         <div className="form-group">
           <label>Route:</label>
-          <select
-            name="routeId"
-            value={formData.routeId}
-            onChange={handleChange}
+          <Select
+            options={routeOptions}
+            value={routeOptions.find(option => option.value === formData.routeId)}
+            onChange={handleRouteChange}
+            placeholder="Select Route"
+            isSearchable
             required
-          >
-            <option value="">Select Route</option>
-            {routes.map(route => (
-              <option key={route.id} value={route.id}>
-                {route.name}
-              </option>
-            ))}
-          </select>
+          />
         </div>
         
         <div className="form-group">
           <label>Customer:</label>
-          <select
-            name="customerId"
-            value={formData.customerId}
-            onChange={handleChange}
+          <Select
+            options={customerOptions}
+            value={customerOptions.find(option => option.value === formData.customerId)}
+            onChange={handleCustomerChange}
+            placeholder="Select Customer"
+            isSearchable
             required
-          >
-            <option value="">Select Customer</option>
-            {customers.map(customer => (
-              <option key={customer.id} value={customer.id}>
-                {customer.name} ({customer.phone}) - Balance: ₹{customer.currentBalance || 0}
-              </option>
-            ))}
-          </select>
+          />
         </div>
         
         {selectedCustomer && (
@@ -271,19 +312,14 @@ const handleSubmit = async (e) => {
         
         <div className="form-group">
           <label>Product:</label>
-          <select
-            name="productId"
-            value={formData.productId}
-            onChange={handleChange}
+          <Select
+            options={productOptions}
+            value={productOptions.find(option => option.value === formData.productId)}
+            onChange={handleProductChange}
+            placeholder="Select Product"
+            isSearchable
             required
-          >
-            <option value="">Select Product</option>
-            {products.map(product => (
-              <option key={product.id} value={product.id}>
-                {product.name} (₹{product.price})
-              </option>
-            ))}
-          </select>
+          />
         </div>
         
         {selectedProduct && (
@@ -379,7 +415,7 @@ const handleSubmit = async (e) => {
           </>
         )}
         
-        <button type="submit" className="submit-btn">Record Sale</button>
+        <button type="submit" className="submit-btn">Save</button>
       </form>
     </div>
   );

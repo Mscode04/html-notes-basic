@@ -2,9 +2,10 @@ import React, { useState, useEffect } from "react";
 import { db } from "../Firebase/config";
 import { collection, getDocs, query, orderBy } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
-import { Container, Table, Button, Spinner, Alert, Form, Row, Col, Card, Pagination } from "react-bootstrap";
+import { Container, Table, Button, Alert, Form, Row, Col, Card, Pagination } from "react-bootstrap";
 import { format } from 'date-fns';
 import * as XLSX from 'xlsx';
+import { Box } from '@mui/material';
 
 const AllSales = () => {
   const [sales, setSales] = useState([]);
@@ -168,13 +169,17 @@ const AllSales = () => {
     XLSX.writeFile(workbook, `Sales_Data_${format(new Date(), 'yyyyMMdd_HHmmss')}.xlsx`);
   };
 
-  if (loading) {
-    return (
-      <Container className="d-flex justify-content-center align-items-center" style={{ height: '80vh' }}>
-        <Spinner animation="border" variant="primary" />
-      </Container>
-    );
-  }
+if (loading) {
+  return (
+    <Box display="flex" justifyContent="center" alignItems="center" minHeight="200px">
+      <img
+        src="https://cdn.pixabay.com/animation/2023/10/08/03/19/03-19-26-213_512.gif"
+        alt="Loading..."
+        style={{ width: '150px', height: '150px' }}
+      />
+    </Box>
+  );
+}
 
   if (error) {
     return (

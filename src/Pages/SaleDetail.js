@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { db } from "../Firebase/config";
-import { doc, getDoc, deleteDoc, updateDoc,query,collection,getDocs,where } from "firebase/firestore";
+import { doc, getDoc, deleteDoc, updateDoc, query, collection, getDocs, where } from "firebase/firestore";
 import { useNavigate, useParams } from "react-router-dom";
-import { Container, Card, Button, Spinner, Alert, Badge, Row, Col, Modal, Form, Toast } from "react-bootstrap";
+import { Container, Card, Button, Spinner, Alert, Badge, Row, Col, Modal, Form, Toast, ToastContainer } from "react-bootstrap";
 import { format } from 'date-fns';
 import { PDFDownloadLink } from '@react-pdf/renderer';
-import SaleReceiptPDF from "./SaleReceiptPDF"; // We'll create this component
+import SaleReceiptPDF from "./SaleReceiptPDF";
 
 const SaleDetail = () => {
   const { id } = useParams();
@@ -14,8 +14,7 @@ const SaleDetail = () => {
   const [error, setError] = useState(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [pin, setPin] = useState("");
-  const [showToast, setShowToast] = useState(false);
-  const [toastMessage, setToastMessage] = useState("");
+  const [toasts, setToasts] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -41,6 +40,7 @@ const SaleDetail = () => {
       } catch (err) {
         console.error("Error fetching sale:", err);
         setError(err.message || "Failed to load sale details");
+        addToast("Error loading sale details", "danger");
       } finally {
         setLoading(false);
       }
@@ -48,6 +48,19 @@ const SaleDetail = () => {
 
     fetchSale();
   }, [id]);
+
+  const addToast = (message, variant = "success") => {
+    const newToast = {
+      id: Date.now(),
+      message,
+      variant
+    };
+    setToasts(prev => [...prev, newToast]);
+  };
+
+  const removeToast = (id) => {
+    setToasts(prev => prev.filter(toast => toast.id !== id));
+  };
 
   const formatCurrency = (amount) => {
     return new Intl.NumberFormat('en-IN', {
@@ -60,8 +73,7 @@ const SaleDetail = () => {
 
   const handleDelete = async () => {
     if (pin !== "1234") {
-      setToastMessage("Invalid PIN");
-      setShowToast(true);
+      addToast("Invalid PIN", "danger");
       return;
     }
 
@@ -87,13 +99,14 @@ const SaleDetail = () => {
       // Then delete the sale
       await deleteDoc(doc(db, "sales", id));
       
-      setToastMessage("Sale deleted successfully");
-      setShowToast(true);
-      setTimeout(() => navigate('/sales'), 1500);
+      addToast("Sale deleted successfully");
+      setTimeout(() => navigate('/all-sales'), 1500);
     } catch (err) {
       console.error("Error deleting sale:", err);
-      setToastMessage("Failed to delete sale");
-      setShowToast(true);
+      addToast("Failed to delete sale", "danger");
+    } finally {
+      setShowDeleteModal(false);
+      setPin("");
     }
   };
 
@@ -104,13 +117,15 @@ const SaleDetail = () => {
       </Container>
     );
   }
-const shopDetails = {
-  name: "Your Shop Name",
-  address: "Shop Address, City, State - PIN",
-  phone: "1234567890",
-  gst: "GSTIN123456789",
-  footerNote: "Goods once sold will not be taken back"
-};
+
+  const shopDetails = {
+    name: "Your Shop Name",
+    address: "Shop Address, City, State - PIN",
+    phone: "1234567890",
+    gst: "GSTIN123456789",
+    footerNote: "Goods once sold will not be taken back"
+  };
+
   if (error) {
     return (
       <Container className="mt-4">
@@ -118,7 +133,7 @@ const shopDetails = {
           <Alert.Heading>Error Loading Sale</Alert.Heading>
           <p>{error}</p>
           <div className="d-flex justify-content-end">
-            <Button variant="outline-danger" onClick={() => navigate('/sales')}>
+            <Button variant="outline-danger" onClick={() => navigate('/all-sales')}>
               Back to Sales List
             </Button>
           </div>
@@ -134,7 +149,7 @@ const shopDetails = {
           <Alert.Heading>Sale Not Found</Alert.Heading>
           <p>The requested sale could not be found in our records.</p>
           <div className="d-flex justify-content-end">
-            <Button variant="outline-secondary" onClick={() => navigate('/sales')}>
+            <Button variant="outline-secondary" onClick={() => navigate('/all-sales')}>
               Back to Sales List
             </Button>
           </div>
@@ -145,22 +160,30 @@ const shopDetails = {
 
   return (
     <Container className="py-4">
-      <Toast 
-        show={showToast} 
-        onClose={() => setShowToast(false)} 
-        delay={3000} 
-        autohide
-        className="position-fixed top-0 end-0 m-3"
-      >
-        <Toast.Header>
-          <strong className="me-auto">Notification</strong>
-        </Toast.Header>
-        <Toast.Body>{toastMessage}</Toast.Body>
-      </Toast>
+      {/* Toast Container for all notifications */}
+      <ToastContainer position="top-end" className="p-3" style={{ zIndex: 1 }}>
+        {toasts.map(toast => (
+          <Toast 
+            key={toast.id}
+            onClose={() => removeToast(toast.id)}
+            show={true}
+            delay={3000}
+            autohide
+            bg={toast.variant}
+          >
+            <Toast.Header closeButton={true}>
+              <strong className="me-auto">Notification</strong>
+            </Toast.Header>
+            <Toast.Body className={toast.variant === 'danger' ? 'text-white' : ''}>
+              {toast.message}
+            </Toast.Body>
+          </Toast>
+        ))}
+      </ToastContainer>
 
       <Button 
         variant="outline-secondary" 
-        onClick={() => navigate('/sales')} 
+        onClick={() => navigate('/all-sales')} 
         className="mb-3"
       >
         &larr; Back to All Sales
@@ -243,11 +266,6 @@ const shopDetails = {
             </Col>
           </Row>
         </Card.Body>
-        <Card.Footer className="d-flex justify-content-end">
-          {/* <Button variant="primary" onClick={() => window.print()}>
-            Print Receipt
-          </Button> */}
-        </Card.Footer>
       </Card>
 
       {/* Delete Confirmation Modal */}
@@ -256,21 +274,31 @@ const shopDetails = {
           <Modal.Title>Confirm Deletion</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <p>Are you sure you want to delete this sale? This action cannot be undone.</p>
-          <p>Enter PIN to confirm:</p>
+          <Alert variant="danger" className="mb-3">
+            <strong>Warning!</strong> Deleting this sale will:
+            <ul className="mt-2">
+              <li>Remove it permanently from records</li>
+              <li>Adjust the customer's balance and gas on hand</li>
+            </ul>
+          </Alert>
+          <p>Enter PIN to confirm deletion:</p>
           <Form.Control
             type="password"
             value={pin}
             onChange={(e) => setPin(e.target.value)}
             placeholder="Enter PIN (1234)"
+            className="mb-3"
           />
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowDeleteModal(false)}>
+          <Button variant="secondary" onClick={() => {
+            setShowDeleteModal(false);
+            setPin("");
+          }}>
             Cancel
           </Button>
           <Button variant="danger" onClick={handleDelete}>
-            Delete Sale
+            Confirm Delete
           </Button>
         </Modal.Footer>
       </Modal>

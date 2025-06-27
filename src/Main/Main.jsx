@@ -95,7 +95,7 @@ const Main = () => {
       {/* Sidebar/Navbar */}
       <nav className={`sidebar ${isMenuCollapsed ? "collapsed" : ""}`}>
         <div className="sidebar-header">
-          <img src={logo} alt="ClinicPro Logo" className="logo" />
+          <img src={logo} alt=" Logo" className="logo" />
       
           {/* <button className="menu-toggle" onClick={toggleMenu}>
             <span className="material-icons">
