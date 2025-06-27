@@ -143,6 +143,7 @@ const NewConnection = () => {
         <div className="form-group">
           <label>Address:</label>
           <textarea
+          className="form-control"
             name="address"
             value={formData.address}
             onChange={handleChange}

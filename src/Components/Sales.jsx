@@ -104,28 +104,30 @@ const Sales = () => {
     }
   }, [formData.routeId, routes]);
 
-  useEffect(() => {
-    if (selectedProduct && formData.salesQuantity) {
-      const todayCredit = selectedProduct.price * formData.salesQuantity;
-      const totalBalance = (formData.previousBalance || 0) + todayCredit - formData.totalAmountReceived;
-      
-      setFormData(prev => ({
-        ...prev,
-        todayCredit,
-        totalBalance
-      }));
-    }
-  }, [selectedProduct, formData.salesQuantity, formData.totalAmountReceived, formData.previousBalance]);
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ 
-      ...prev, 
-      [name]: name === "salesQuantity" || name === "emptyQuantity" || name === "totalAmountReceived" 
-        ? parseInt(value) || 0 
-        : value 
+useEffect(() => {
+  if (selectedProduct && formData.salesQuantity) {
+    const todayCredit = Number(selectedProduct.price) * Number(formData.salesQuantity);
+    const previousBalance = Number(formData.previousBalance) || 0;
+    const totalAmountReceived = Number(formData.totalAmountReceived) || 0;
+    const totalBalance = previousBalance + todayCredit - totalAmountReceived;
+    
+    setFormData(prev => ({
+      ...prev,
+      todayCredit,
+      totalBalance
     }));
-  };
+  }
+}, [selectedProduct, formData.salesQuantity, formData.totalAmountReceived, formData.previousBalance]);
+
+const handleChange = (e) => {
+  const { name, value } = e.target;
+  setFormData(prev => ({ 
+    ...prev, 
+    [name]: name === "salesQuantity" || name === "emptyQuantity" || name === "totalAmountReceived" 
+      ? Number(value) || 0 
+      : value 
+  }));
+};
 
   const handleCustomerChange = (selectedOption) => {
     setFormData(prev => ({
