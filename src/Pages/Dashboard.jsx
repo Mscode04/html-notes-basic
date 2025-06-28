@@ -147,7 +147,7 @@ const Dashboard = () => {
     { name: "Amount Received", value: totalAmountReceived }
   ];
 
-  const COLORS = ['#00bf63', '#ff3131'];
+  const COLORS = ['#FFE072', '#9AD8D8'];
 
   if (loading) {
     return (
