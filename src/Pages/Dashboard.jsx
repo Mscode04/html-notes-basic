@@ -1,29 +1,66 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { db } from "../Firebase/config";
 import { collection, getDocs, query, orderBy } from "firebase/firestore";
 import { 
-  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
-  LineChart, Line 
+  PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend
 } from 'recharts';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import "./Dashboard.css";
-import { Box } from '@mui/material';
+import { 
+  Box, 
+  FormControl, 
+  InputLabel, 
+  MenuItem, 
+  Select, 
+  Card, 
+  CardContent,
+  Typography,
+  Divider,
+  Button,
+  ButtonGroup
+} from '@mui/material';
+import { styled } from '@mui/system';
+
+const PremiumCard = styled(Card)(({ theme }) => ({
+  background: 'linear-gradient(145deg, #1a237e, #283593)',
+  color: 'white',
+  borderRadius: '12px',
+  boxShadow: '0 8px 16px rgba(0, 0, 0, 0.2)',
+  transition: 'transform 0.3s ease-in-out',
+  '&:hover': {
+    transform: 'translateY(-5px)'
+  }
+}));
+
+const ActionButton = styled(Button)(({ theme }) => ({
+  background: 'rgba(255, 255, 255, 0.1)',
+  color: 'white',
+  border: '1px solid rgba(255, 255, 255, 0.3)',
+  '&:hover': {
+    background: 'rgba(255, 255, 255, 0.2)'
+  },
+  '&.active': {
+    background: 'rgba(255, 255, 255, 0.3)',
+    fontWeight: 'bold'
+  }
+}));
 
 const Dashboard = () => {
+  const navigate = useNavigate();
   const [salesData, setSalesData] = useState([]);
   const [customersData, setCustomersData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
-  const [selectedRoute, setSelectedRoute] = useState("All");
   const [timePeriod, setTimePeriod] = useState("today");
+  const [activeView, setActiveView] = useState("dashboard");
   const [routes, setRoutes] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Fetch sales data
         const salesQuery = query(collection(db, "sales"), orderBy("timestamp", "desc"));
         const salesSnapshot = await getDocs(salesQuery);
         const salesData = salesSnapshot.docs.map(doc => {
@@ -32,12 +69,11 @@ const Dashboard = () => {
             id: doc.id,
             ...data,
             date: data.timestamp?.toDate(),
-            route: data.route || 'Unknown' // Default to 'Unknown' if route doesn't exist
+            route: data.route || 'Unknown'
           };
         });
         setSalesData(salesData);
 
-        // Fetch customers data
         const customersQuery = query(collection(db, "customers"));
         const customersSnapshot = await getDocs(customersQuery);
         const customersData = customersSnapshot.docs.map(doc => ({
@@ -46,7 +82,6 @@ const Dashboard = () => {
         }));
         setCustomersData(customersData);
 
-        // Extract unique routes
         const routeSet = new Set();
         salesData.forEach(sale => {
           if (sale.route) {
@@ -55,9 +90,6 @@ const Dashboard = () => {
         });
         const uniqueRoutes = Array.from(routeSet).filter(route => route && route.trim() !== '');
         setRoutes(["All", ...uniqueRoutes]);
-
-        console.log("Routes found:", uniqueRoutes); // Debug log
-        console.log("Sales data sample:", salesData.slice(0, 3)); // Debug log
 
         setLoading(false);
       } catch (error) {
@@ -69,9 +101,7 @@ const Dashboard = () => {
     fetchData();
   }, []);
 
-  // Filter data based on selected filters
   const filteredData = salesData.filter(sale => {
-    // Filter by time period
     if (timePeriod !== "All") {
       const today = new Date();
       const saleDate = sale.date ? new Date(sale.date) : null;
@@ -102,14 +132,9 @@ const Dashboard = () => {
         }
       }
     }
-
-    // Filter by route
-    if (selectedRoute !== "All" && sale.route !== selectedRoute) return false;
-
     return true;
   });
 
-  // Calculate summary statistics
   const totalSalesAmount = filteredData.reduce((sum, sale) => sum + (sale.todayCredit || 0), 0);
   const totalSalesQuantity = filteredData.reduce((sum, sale) => sum + (sale.salesQuantity || 0), 0);
   const totalEmptyQuantity = filteredData.reduce((sum, sale) => sum + (sale.emptyQuantity || 0), 0);
@@ -117,71 +142,78 @@ const Dashboard = () => {
   const totalBalance = customersData.reduce((sum, customer) => sum + (customer.currentBalance || 0), 0);
   const totalAmountReceived = filteredData.reduce((sum, sale) => sum + (sale.totalAmountReceived || 0), 0);
 
-  // Prepare data for Sales by Route chart
-  const salesByRoute = routes
-    .filter(r => r !== "All" && r !== "Unknown")
-    .map(route => {
-      const routeSales = filteredData.filter(sale => sale.route === route);
-      return {
-        name: route,
-        sales: routeSales.reduce((sum, sale) => sum + (sale.todayCredit || 0), 0),
-        amountReceived: routeSales.reduce((sum, sale) => sum + (sale.totalAmountReceived || 0), 0),
-        count: routeSales.length
-      };
-    });
+  const salesVsReceivedPieData = [
+    { name: "Sales Amount", value: totalSalesAmount },
+    { name: "Amount Received", value: totalAmountReceived }
+  ];
 
-  console.log("Sales by route data:", salesByRoute); // Debug log
+  const COLORS = ['#00bf63', '#ff3131'];
 
-  // Prepare data for Sales vs Amount Received chart
-  const salesVsReceived = filteredData
-    .sort((a, b) => (a.date || 0) - (b.date || 0))
-    .map(sale => ({
-      date: sale.date?.toLocaleDateString() || 'No Date',
-      sales: sale.todayCredit || 0,
-      amountReceived: sale.totalAmountReceived || 0
-    }));
-
-if (loading) {
-  return (
-    <Box display="flex" justifyContent="center" alignItems="center" minHeight="200px">
-      <img
-        src="https://cdn.pixabay.com/animation/2023/10/08/03/19/03-19-26-213_512.gif"
-        alt="Loading..."
-        style={{ width: '150px', height: '150px' }}
-      />
-    </Box>
-  );
-}
+  if (loading) {
+    return (
+      <Box display="flex" justifyContent="center" alignItems="center" minHeight="200px">
+        <img
+          src="https://cdn.pixabay.com/animation/2023/10/08/03/19/03-19-26-213_512.gif"
+          alt="Loading..."
+          style={{ width: '150px', height: '150px' }}
+        />
+      </Box>
+    );
+  }
 
   return (
-    <div className="dashboard-container">
-      {/* Filters Section at the Top */}
-      <section className="filters-section">
-        <div className="filter-group">
-          <label>Time Period:</label>
-          <select 
-            value={timePeriod} 
-            onChange={(e) => {
-              setTimePeriod(e.target.value);
-              if (e.target.value !== "custom") {
-                setStartDate(null);
-                setEndDate(null);
-              }
-            }}
-          >
-            <option value="today">Today</option>
-            <option value="lastWeek">Last Week</option>
-            <option value="lastMonth">Last Month</option>
-            <option value="lastYear">Last Year</option>
-            <option value="custom">Custom Range</option>
-            <option value="All">All Time</option>
-          </select>
-        </div>
+    <div className="dashboard-container" style={{ background: '#f5f7fa', padding: '24px' }}>
+      {/* Filters Section */}
+      <PremiumCard sx={{ mb: 4, p: 3 }}>
+        <Box sx={{ 
+          display: 'flex', 
+          flexWrap: 'wrap', 
+          gap: 3,
+          alignItems: 'center'
+        }}>
+          <FormControl sx={{ minWidth: 200 }}>
+            <InputLabel id="time-period-label" sx={{ color: 'white' }}>Time Period</InputLabel>
+            <Select
+              labelId="time-period-label"
+              id="time-period-select"
+              value={timePeriod}
+              label="Time Period"
+              onChange={(e) => {
+                setTimePeriod(e.target.value);
+                if (e.target.value !== "custom") {
+                  setStartDate(null);
+                  setEndDate(null);
+                }
+              }}
+              sx={{
+                color: 'white',
+                '& .MuiOutlinedInput-notchedOutline': {
+                  borderColor: 'rgba(255, 255, 255, 0.5)',
+                },
+                '& .MuiSvgIcon-root': {
+                  color: 'white',
+                },
+              }}
+              MenuProps={{
+                PaperProps: {
+                  sx: {
+                    bgcolor: '#1a237e',
+                    color: 'white'
+                  }
+                }
+              }}
+            >
+              <MenuItem value="today">Today</MenuItem>
+              <MenuItem value="lastWeek">Last Week</MenuItem>
+              <MenuItem value="lastMonth">Last Month</MenuItem>
+              <MenuItem value="lastYear">Last Year</MenuItem>
+              <MenuItem value="custom">Custom Range</MenuItem>
+              <MenuItem value="All">All Time</MenuItem>
+            </Select>
+          </FormControl>
 
-        {timePeriod === "custom" && (
-          <>
-            <div className="filter-group">
-              <label>Start Date:</label>
+          {timePeriod === "custom" && (
+            <>
               <DatePicker
                 selected={startDate}
                 onChange={(date) => setStartDate(date)}
@@ -189,11 +221,10 @@ if (loading) {
                 startDate={startDate}
                 endDate={endDate}
                 isClearable
-                placeholderText="Select start date"
+                placeholderText="Start Date"
+                className="custom-datepicker"
+                wrapperClassName="premium-datepicker"
               />
-            </div>
-            <div className="filter-group">
-              <label>End Date:</label>
               <DatePicker
                 selected={endDate}
                 onChange={(date) => setEndDate(date)}
@@ -202,110 +233,152 @@ if (loading) {
                 endDate={endDate}
                 minDate={startDate}
                 isClearable
-                placeholderText="Select end date"
+                placeholderText="End Date"
+                className="custom-datepicker"
+                wrapperClassName="premium-datepicker"
               />
-            </div>
-          </>
-        )}
-
-        {/* <div className="filter-group">
-          <label>Route:</label>
-          <select 
-            value={selectedRoute} 
-            onChange={(e) => setSelectedRoute(e.target.value)}
-          >
-            {routes.map(route => (
-              <option key={route} value={route}>{route}</option>
-            ))}
-          </select>
-        </div> */}
-      </section>
-
-      {/* Charts Section */}
-      <section className="charts-section">
-        <div className="chart-container">
-          <h3>Sales by Route</h3>
-          {salesByRoute.length > 0 ? (
-            <ResponsiveContainer width="100%" height={300}>
-              <BarChart data={salesByRoute}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="name" />
-                <YAxis />
-                <Tooltip 
-                  formatter={(value, name) => [
-                    name === 'sales' ? `₹${value.toLocaleString('en-IN')}` : `₹${value.toLocaleString('en-IN')}`,
-                    name === 'sales' ? 'Sales Amount' : 'Amount Received'
-                  ]}
-                />
-                <Legend />
-                <Bar dataKey="sales" fill="#8884d8" name="Sales Amount" />
-                <Bar dataKey="amountReceived" fill="#82ca9d" name="Amount Received" />
-              </BarChart>
-            </ResponsiveContainer>
-          ) : (
-            <p>No sales data available for the selected routes/filters</p>
+            </>
           )}
-        </div>
 
-        <div className="chart-container">
-          <h3>Sales vs Amount Received Over Time</h3>
-          <ResponsiveContainer width="100%" height={300}>
-            <LineChart data={salesVsReceived}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="date" />
-              <YAxis />
+          <ButtonGroup variant="outlined" sx={{ ml: 'auto', gap: 1 }}>
+            <ActionButton 
+              onClick={() => navigate('/sales')}
+              className={activeView === "new-sales" ? "active" : ""}
+            >
+              New Sales
+            </ActionButton>
+            <ActionButton 
+              onClick={() => navigate('/all-sales')}
+              className={activeView === "sales" ? "active" : ""}
+            >
+              Sales Report
+            </ActionButton>
+            <ActionButton 
+              onClick={() => navigate('/all-customers')}
+              className={activeView === "customers" ? "active" : ""}
+            >
+              Customers
+            </ActionButton>
+            <ActionButton 
+              onClick={() => navigate('/products')}
+              className={activeView === "products" ? "active" : ""}
+            >
+              Products
+            </ActionButton>
+          </ButtonGroup>
+        </Box>
+      </PremiumCard>
+
+      {/* Main Chart Section */}
+      <Box sx={{ display: 'flex', gap: 4, mb: 4 }}>
+        <PremiumCard sx={{ flex: 1, p: 3 }}>
+          <Typography variant="h6" gutterBottom sx={{ color: 'white' }}>
+            Sales vs Amount Received
+          </Typography>
+          <Divider sx={{ bgcolor: 'rgba(255, 255, 255, 0.2)', mb: 3 }} />
+          <ResponsiveContainer width="100%" height={400}>
+            <PieChart>
+              <Pie
+                data={salesVsReceivedPieData}
+                cx="50%"
+                cy="50%"
+                labelLine={false}
+                outerRadius={120}
+                fill="#8884d8"
+                dataKey="value"
+                label={({ name, percent }) => `${name}: ₹${(percent * totalSalesAmount).toLocaleString('en-IN')}`}
+              >
+                {salesVsReceivedPieData.map((entry, index) => (
+                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                ))}
+              </Pie>
               <Tooltip 
-                formatter={(value, name) => [
-                  `₹${value.toLocaleString('en-IN')}`,
-                  name === 'sales' ? 'Sales Amount' : 'Amount Received'
-                ]}
+                formatter={(value) => [`₹${value.toLocaleString('en-IN')}`, 'Amount']}
+                contentStyle={{
+                  background: '#1a237e',
+                  borderColor: '#4e79a7',
+                  borderRadius: '8px',
+                  color: 'white'
+                }}
               />
-              <Legend />
-              <Line 
-                type="monotone" 
-                dataKey="sales" 
-                stroke="#8884d8" 
-                name="Sales Amount" 
-                activeDot={{ r: 8 }} 
+              <Legend 
+                wrapperStyle={{
+                  paddingTop: '20px'
+                }}
               />
-              <Line 
-                type="monotone" 
-                dataKey="amountReceived" 
-                stroke="#82ca9d" 
-                name="Amount Received" 
-              />
-            </LineChart>
+            </PieChart>
           </ResponsiveContainer>
-        </div>
-      </section>
+        </PremiumCard>
+      </Box>
 
-      {/* Summary Cards Section at the Bottom */}
-      <section className="summary-section">
-        <div className="summary-card">
-          <h3>Total Sales Amount</h3>
-          <p>₹{totalSalesAmount.toLocaleString('en-IN')}</p>
-        </div>
-        <div className="summary-card">
-          <h3>Total Sales Quantity</h3>
-          <p>{totalSalesQuantity}</p>
-        </div>
-        <div className="summary-card">
-          <h3>Total Empty Cylinders</h3>
-          <p>{totalEmptyQuantity}</p>
-        </div>
-        <div className="summary-card">
-          <h3>Total Gas On Hand</h3>
-          <p>{totalGasQuantity}</p>
-        </div>
-        <div className="summary-card">
-          <h3>Total Balance Due</h3>
-          <p>₹{totalBalance.toLocaleString('en-IN')}</p>
-        </div>
-        <div className="summary-card">
-          <h3>Total Amount Received</h3>
-          <p>₹{totalAmountReceived.toLocaleString('en-IN')}</p>
-        </div>
-      </section>
+      {/* Summary Cards Section */}
+      <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', gap: 3 }}>
+        <PremiumCard>
+          <CardContent>
+            <Typography variant="h6" gutterBottom sx={{ color: 'white' }}>
+              Total Sales Amount
+            </Typography>
+            <Typography variant="h4" sx={{ color: 'white' }}>
+              ₹{totalSalesAmount.toLocaleString('en-IN')}
+            </Typography>
+          </CardContent>
+        </PremiumCard>
+        
+        <PremiumCard>
+          <CardContent>
+            <Typography variant="h6" gutterBottom sx={{ color: 'white' }}>
+              Total Sales Quantity
+            </Typography>
+            <Typography variant="h4" sx={{ color: 'white' }}>
+              {totalSalesQuantity}
+            </Typography>
+          </CardContent>
+        </PremiumCard>
+        
+        <PremiumCard>
+          <CardContent>
+            <Typography variant="h6" gutterBottom sx={{ color: 'white' }}>
+              Total Empty Cylinders
+            </Typography>
+            <Typography variant="h4" sx={{ color: 'white' }}>
+              {totalEmptyQuantity}
+            </Typography>
+          </CardContent>
+        </PremiumCard>
+        
+        <PremiumCard>
+          <CardContent>
+            <Typography variant="h6" gutterBottom sx={{ color: 'white' }}>
+              Total Gas On Hand
+            </Typography>
+            <Typography variant="h4" sx={{ color: 'white' }}>
+              {totalGasQuantity}
+            </Typography>
+          </CardContent>
+        </PremiumCard>
+        
+        <PremiumCard>
+          <CardContent>
+            <Typography variant="h6" gutterBottom sx={{ color: 'white' }}>
+              Total Balance Due
+            </Typography>
+            <Typography variant="h4" sx={{ color: 'white' }}>
+              ₹{totalBalance.toLocaleString('en-IN')}
+            </Typography>
+          </CardContent>
+        </PremiumCard>
+        
+        <PremiumCard>
+          <CardContent>
+            <Typography variant="h6" gutterBottom sx={{ color: 'white' }}>
+              Total Amount Received
+            </Typography>
+            <Typography variant="h4" sx={{ color: 'white' }}>
+              ₹{totalAmountReceived.toLocaleString('en-IN')}
+            </Typography>
+          </CardContent>
+        </PremiumCard>
+      </Box>
     </div>
   );
 };
