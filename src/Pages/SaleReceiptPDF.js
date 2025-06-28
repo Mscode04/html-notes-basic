@@ -4,11 +4,12 @@ import { format } from 'date-fns';
 
 // Define your shop details here or import them
 const shopDetails = {
-  name: "Your Shop Name",
-  address: "Shop Address, City, State - PIN",
-  phone: "1234567890",
+  name: "THARAYIL BHARATGAS",
+  address: "Palakkad - Kozhikode Hwy, Makkaraparamba, Kerala 676507",
+  phone: "+91 9605111444",
+  DISTRIBUTORCODE: "183041",
   gst: "GSTIN123456789",
-  footerNote: "Goods once sold will not be taken back"
+  footerNote: "Billed by Neuraq Portal"
 };
 
 const styles = StyleSheet.create({
@@ -71,6 +72,7 @@ const SaleReceiptPDF = ({ sale }) => (
       <View style={styles.header}>
         <Text style={styles.title}>{shopDetails.name}</Text>
         <Text style={styles.subtitle}>{shopDetails.address}</Text>
+        <Text style={styles.subtitle}>DISTRIBUTOR CODE{shopDetails.DISTRIBUTORCODE}</Text>
         <Text>Phone: {shopDetails.phone} | GST: {shopDetails.gst}</Text>
       </View>
 
@@ -104,7 +106,7 @@ const SaleReceiptPDF = ({ sale }) => (
         </View>
         <View style={styles.row}>
           <Text style={styles.label}>Price:</Text>
-          <Text style={styles.value}>{formatCurrency(sale.productPrice)}</Text>
+          <Text style={styles.value}>{sale.productPrice}</Text>
         </View>
         <View style={styles.row}>
           <Text style={styles.label}>Quantity:</Text>
@@ -120,15 +122,15 @@ const SaleReceiptPDF = ({ sale }) => (
         <Text style={styles.sectionTitle}>Payment Details</Text>
         <View style={styles.row}>
           <Text style={styles.label}>Total Amount:</Text>
-          <Text style={styles.value}>{formatCurrency(sale.todayCredit)}</Text>
+          <Text style={styles.value}>{sale.todayCredit}</Text>
         </View>
         <View style={styles.row}>
           <Text style={styles.label}>Amount Paid:</Text>
-          <Text style={styles.value}>{formatCurrency(sale.totalAmountReceived)}</Text>
+          <Text style={styles.value}>{sale.totalAmountReceived}</Text>
         </View>
         <View style={styles.row}>
           <Text style={styles.label}>Balance:</Text>
-          <Text style={styles.value}>{formatCurrency(sale.totalBalance)}</Text>
+          <Text style={styles.value}>{sale.totalBalance}</Text>
         </View>
       </View>
 

@@ -211,7 +211,7 @@ if (loading) {
         <Col md={2}>
           <Card className="text-white bg-primary mb-3">
             <Card.Body>
-              <Card.Title>Total Sales</Card.Title>
+              <Card.Title>Total Sales Amount</Card.Title>
               <Card.Text>{formatCurrency(summary.totalSalesAmount)}</Card.Text>
             </Card.Body>
           </Card>
@@ -336,9 +336,10 @@ if (loading) {
                   <th>Customer</th>
                   <th>Phone</th>
                   <th>Route</th>
-                  <th>Product</th>
+                  <th>Product Price</th>
                   <th>Sale Qty</th>
                   <th>Empty Qty</th>
+                  <th>WOUT GST</th>
                   <th>Credit</th>
                   <th>Received</th>
                   <th>Balance</th>
@@ -352,9 +353,10 @@ if (loading) {
                     <td>{sale.customerName || 'N/A'}</td>
                     <td>{sale.customerPhone || 'N/A'}</td>
                     <td>{sale.routeName || 'N/A'}</td>
-                    <td>{sale.productName || 'N/A'}</td>
+                    <td>{formatCurrency(sale.productPrice) || 'N/A'}</td>
                     <td>{sale.salesQuantity}</td>
                     <td>{sale.emptyQuantity}</td>
+                    <td>{formatCurrency(sale.todayCredit / 1.18)}</td>
                     <td>{formatCurrency(sale.todayCredit)}</td>
                     <td>{formatCurrency(sale.totalAmountReceived)}</td>
                     <td className={sale.totalBalance > 0 ? 'text-danger' : 'text-success'}>
