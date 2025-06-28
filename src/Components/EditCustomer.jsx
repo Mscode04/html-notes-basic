@@ -204,7 +204,7 @@ if (loading) {
           >
             <option value="">Select Route</option>
             {routes.map(route => (
-              <option key={route.id} value={route.id}>
+              <option key={route.id} value={route.name}>
                 {route.name}
               </option>
             ))}

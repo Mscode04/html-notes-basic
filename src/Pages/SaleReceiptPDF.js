@@ -8,7 +8,7 @@ const shopDetails = {
   address: "Palakkad - Kozhikode Hwy, Makkaraparamba, Kerala 676507",
   phone: "+91 9605111444",
   DISTRIBUTORCODE: "183041",
-  gst: "GSTIN123456789",
+  gst: "32AALFT3265D1ZC",
   footerNote: "Billed by Neuraq Portal"
 };
 

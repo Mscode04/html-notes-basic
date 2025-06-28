@@ -37,6 +37,7 @@ const Main = () => {
     { path: "/routes", name: "New Route", icon: "alt_route" },
     { path: "/products", name: "Products", icon: "inventory" },
     { path: "/check-in", name: "Check-in Reports", icon: "checklist" },
+    { path: "/msg", name: "Massages", icon: "assignment" },
     // { path: "/help", name: "Help", icon: "help" },
   ];
 

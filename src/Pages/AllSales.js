@@ -192,7 +192,7 @@ if (loading) {
   return (
     <Container className="py-4">
       <div className="d-flex justify-content-between align-items-center mb-4">
-        <h2>Sales History</h2>
+        <h2>Sales History ({summary.totalDocuments})</h2>
         <Button variant="success" onClick={exportToExcel}>
           Export to Excel
         </Button>
@@ -200,14 +200,14 @@ if (loading) {
 
       {/* Summary Cards */}
       <Row className="mb-4">
-        <Col md={2}>
+        {/* <Col md={2}>
           <Card className="text-white bg-info mb-3">
             <Card.Body>
               <Card.Title>Total Documents</Card.Title>
               <Card.Text>{summary.totalDocuments}</Card.Text>
             </Card.Body>
           </Card>
-        </Col>
+        </Col> */}
         <Col md={2}>
           <Card className="text-white bg-primary mb-3">
             <Card.Body>
@@ -226,6 +226,14 @@ if (loading) {
         </Col>
         <Col md={2}>
           <Card className={`text-white ${summary.totalBalance > 0 ? 'bg-danger' : 'bg-warning'} mb-3`}>
+            <Card.Body>
+              <Card.Title>Balance in This Filter</Card.Title>
+              <Card.Text>{formatCurrency(summary.totalSalesAmount-summary.totalReceived)}</Card.Text>
+            </Card.Body>
+          </Card>
+        </Col>
+        <Col md={2}>
+          <Card className={`text-white ${summary.totalBalance > 0 ? 'bg-warning' : 'bg-warning'} mb-3`}>
             <Card.Body>
               <Card.Title>Total Balance</Card.Title>
               <Card.Text>{formatCurrency(summary.totalBalance)}</Card.Text>
@@ -356,7 +364,7 @@ if (loading) {
                     <td>{formatCurrency(sale.productPrice) || 'N/A'}</td>
                     <td>{sale.salesQuantity}</td>
                     <td>{sale.emptyQuantity}</td>
-                    <td>{formatCurrency(sale.todayCredit / 1.18)}</td>
+                    <td>{formatCurrency(sale.productPrice / 1.18)}</td>
                     <td>{formatCurrency(sale.todayCredit)}</td>
                     <td>{formatCurrency(sale.totalAmountReceived)}</td>
                     <td className={sale.totalBalance > 0 ? 'text-danger' : 'text-success'}>
