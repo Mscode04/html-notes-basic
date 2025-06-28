@@ -157,7 +157,7 @@ if (loading) {
             value={formData.phone}
             onChange={handleChange}
             required
-            disabled
+            
           />
         </div>
         
@@ -189,7 +189,7 @@ if (loading) {
             value={formData.password}
             onChange={handleChange}
             required
-            disabled
+           
           />
         </div>
         

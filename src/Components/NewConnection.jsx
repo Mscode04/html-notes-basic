@@ -57,19 +57,32 @@ const NewConnection = () => {
   fetchLatestCustomerAndRoutes();
 }, []);
 
-  const generatePassword = (phone) => {
-    const randomChars = phone?.slice(-4) + "@tbgmkba";
-    return randomChars;
-  };
+const generatePassword = (name, phone) => {
+  const randomChars = name?.slice(0, 2).toUpperCase() + "TBGS" + phone?.slice(-4);
+  return randomChars;
+};
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
+const handleChange = (e) => {
+  const { name, value } = e.target;
+
+  setFormData(prev => {
+    const updatedFormData = {
       ...prev,
-      [name]: value,
-      ...(name === "phone" && { password: generatePassword(value) })
-    }));
-  };
+      [name]: value
+    };
+
+    // Generate password only when phone or name changes
+    if (name === "phone" || name === "name") {
+      updatedFormData.password = generatePassword(
+        name === "name" ? value : prev.name,
+        name === "phone" ? value : prev.phone
+      );
+    }
+
+    return updatedFormData;
+  });
+};
+
 
 const handleSubmit = async (e) => {
   e.preventDefault();

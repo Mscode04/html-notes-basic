@@ -195,6 +195,12 @@ if (loading) {
               secondary={customer.currentGasOnHand || '0'} 
             />
           </ListItem>
+          <ListItem>
+            <ListItemText 
+              primary="password" 
+              secondary={customer.password || '0'} 
+            />
+          </ListItem>
         </List>
         
         <Box sx={{ display: 'flex', gap: 2, mt: 2 }}>
