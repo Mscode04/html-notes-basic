@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { db } from "../Firebase/config";
 import { doc, getDoc, updateDoc, collection, query, where, getDocs } from "firebase/firestore";
 import { useNavigate, useParams } from "react-router-dom";
-import { Container, Form, Button, Spinner, Alert, Row, Col, Card } from "react-bootstrap";
+import { Container, Form, Button, Spinner, Alert, Row, Col, Card, Badge } from "react-bootstrap";
 import { format } from 'date-fns';
 
 const UpdateSale = () => {
@@ -28,7 +28,8 @@ const UpdateSale = () => {
         setSale({
           ...saleData,
           firebaseId: saleDoc.id,
-          date: saleData.timestamp?.toDate() || new Date(saleData.date || new Date())
+          date: saleData.timestamp?.toDate() || new Date(saleData.date || new Date()),
+          customPrice: saleData.isCustomPrice ? saleData.productPrice : null
         });
 
         // Fetch all customers, products, routes
@@ -54,12 +55,37 @@ const UpdateSale = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setSale(prev => ({
-      ...prev,
-      [name]: name === "salesQuantity" || name === "emptyQuantity" || name === "totalAmountReceived"
-        ? parseInt(value) || 0
-        : value
-    }));
+    setSale(prev => {
+      const updatedSale = {
+        ...prev,
+        [name]: name === "salesQuantity" || name === "emptyQuantity" || name === "totalAmountReceived"
+          ? parseInt(value) || 0
+          : value
+      };
+
+      // Recalculate todayCredit if salesQuantity changes
+      if (name === "salesQuantity") {
+        const currentPrice = updatedSale.customPrice || updatedSale.baseProductPrice || updatedSale.productPrice;
+        updatedSale.todayCredit = currentPrice * updatedSale.salesQuantity;
+      }
+
+      return updatedSale;
+    });
+  };
+
+  const handleCustomPriceChange = (e) => {
+    const { value } = e.target;
+    const price = parseFloat(value) || 0;
+    
+    setSale(prev => {
+      const updatedSale = {
+        ...prev,
+        customPrice: price > 0 ? price : null,
+        todayCredit: price > 0 ? price * prev.salesQuantity : (prev.baseProductPrice || prev.productPrice) * prev.salesQuantity
+      };
+      
+      return updatedSale;
+    });
   };
 
   const handleSubmit = async (e) => {
@@ -71,8 +97,12 @@ const UpdateSale = () => {
       const originalSaleDoc = await getDoc(doc(db, "sales", id));
       const originalSale = originalSaleDoc.data();
 
+      // Determine the actual price to use
+      const actualPrice = sale.customPrice || sale.baseProductPrice || sale.productPrice;
+
       // Calculate differences
-      const amountDiff = sale.todayCredit - originalSale.todayCredit;
+      const todayCredit = actualPrice * sale.salesQuantity;
+      const amountDiff = todayCredit - originalSale.todayCredit;
       const receivedDiff = sale.totalAmountReceived - originalSale.totalAmountReceived;
       const qtyDiff = sale.salesQuantity - originalSale.salesQuantity;
       const emptyDiff = sale.emptyQuantity - originalSale.emptyQuantity;
@@ -80,8 +110,11 @@ const UpdateSale = () => {
       // Update the sale document
       await updateDoc(doc(db, "sales", id), {
         ...sale,
+        productPrice: actualPrice,
+        todayCredit,
+        totalBalance: sale.previousBalance + todayCredit - sale.totalAmountReceived,
         timestamp: new Date(),
-        totalBalance: sale.previousBalance + sale.todayCredit - sale.totalAmountReceived
+        isCustomPrice: sale.customPrice !== null
       });
 
       // Update customer document if needed
@@ -98,7 +131,8 @@ const UpdateSale = () => {
           
           await updateDoc(customerDoc.ref, {
             currentBalance: customerData.currentBalance + amountDiff - receivedDiff,
-            currentGasOnHand: customerData.currentGasOnHand - emptyDiff + qtyDiff
+            currentGasOnHand: customerData.currentGasOnHand - emptyDiff + qtyDiff,
+            lastPurchaseDate: new Date()
           });
         }
       }
@@ -212,6 +246,41 @@ const UpdateSale = () => {
 
               <Col md={6}>
                 <Form.Group className="mb-3">
+                  <Form.Label>Base Price (₹)</Form.Label>
+                  <Form.Control 
+                    type="number" 
+                    value={sale.baseProductPrice || sale.productPrice} 
+                    readOnly 
+                  />
+                </Form.Group>
+
+                <Form.Group className="mb-3">
+                  <Form.Label>
+                    Custom Price (₹) {sale.customPrice !== null && (
+                      <Badge bg="warning" text="dark">Custom</Badge>
+                    )}
+                  </Form.Label>
+                  <Form.Control
+                    type="number"
+                    name="customPrice"
+                    value={sale.customPrice || ''}
+                    onChange={handleCustomPriceChange}
+                    placeholder="Enter custom price"
+                    min="0"
+                    step="0.01"
+                  />
+                </Form.Group>
+
+                <Form.Group className="mb-3">
+                  <Form.Label>Actual Price (₹)</Form.Label>
+                  <Form.Control
+                    type="number"
+                    value={sale.customPrice || sale.baseProductPrice || sale.productPrice}
+                    readOnly
+                  />
+                </Form.Group>
+
+                <Form.Group className="mb-3">
                   <Form.Label>Sales Quantity</Form.Label>
                   <Form.Control
                     type="number"
@@ -234,9 +303,13 @@ const UpdateSale = () => {
                     min="0"
                   />
                 </Form.Group>
+              </Col>
+            </Row>
 
+            <Row>
+              <Col md={6}>
                 <Form.Group className="mb-3">
-                  <Form.Label>Total Amount Received</Form.Label>
+                  <Form.Label>Total Amount Received (₹)</Form.Label>
                   <Form.Control
                     type="number"
                     name="totalAmountReceived"
@@ -246,9 +319,11 @@ const UpdateSale = () => {
                     min="0"
                   />
                 </Form.Group>
+              </Col>
 
+              <Col md={6}>
                 <Form.Group className="mb-3">
-                  <Form.Label>Today Credit</Form.Label>
+                  <Form.Label>Today Credit (₹)</Form.Label>
                   <Form.Control
                     type="number"
                     name="todayCredit"
@@ -256,9 +331,25 @@ const UpdateSale = () => {
                     readOnly
                   />
                 </Form.Group>
+              </Col>
+            </Row>
 
+            <Row>
+              <Col md={6}>
                 <Form.Group className="mb-3">
-                  <Form.Label>Total Balance</Form.Label>
+                  <Form.Label>Previous Balance (₹)</Form.Label>
+                  <Form.Control
+                    type="number"
+                    name="previousBalance"
+                    value={sale.previousBalance}
+                    readOnly
+                  />
+                </Form.Group>
+              </Col>
+
+              <Col md={6}>
+                <Form.Group className="mb-3">
+                  <Form.Label>Total Balance (₹)</Form.Label>
                   <Form.Control
                     type="number"
                     name="totalBalance"

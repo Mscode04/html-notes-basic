@@ -20,13 +20,14 @@ const Sales = () => {
     productData: null,
     routeId: "",
     routeData: null,
-    salesQuantity: 0,
+    salesQuantity: 1,
     emptyQuantity: 0,
     todayCredit: 0,
     totalAmountReceived: 0,
     totalBalance: 0,
     previousBalance: 0,
-    date: new Date().toISOString().split('T')[0]
+    date: new Date().toISOString().split('T')[0],
+    customPrice: null // Added custom price field
   });
 
   useEffect(() => {
@@ -85,7 +86,9 @@ const Sales = () => {
         setSelectedProduct(product);
         setFormData(prev => ({
           ...prev,
-          productData: product
+          productData: product,
+          todayCredit: (prev.customPrice || product.price) * prev.salesQuantity,
+          totalBalance: (prev.previousBalance || 0) + ((prev.customPrice || product.price) * prev.salesQuantity) - prev.totalAmountReceived
         }));
       }
     }
@@ -104,36 +107,57 @@ const Sales = () => {
     }
   }, [formData.routeId, routes]);
 
-useEffect(() => {
-  if (selectedProduct && formData.salesQuantity) {
-    const todayCredit = Number(selectedProduct.price) * Number(formData.salesQuantity);
-    const previousBalance = Number(formData.previousBalance) || 0;
-    const totalAmountReceived = Number(formData.totalAmountReceived) || 0;
-    const totalBalance = previousBalance + todayCredit - totalAmountReceived;
-    
-    setFormData(prev => ({
-      ...prev,
-      todayCredit,
-      totalBalance
-    }));
-  }
-}, [selectedProduct, formData.salesQuantity, formData.totalAmountReceived, formData.previousBalance]);
+  useEffect(() => {
+    if (selectedProduct && formData.salesQuantity) {
+      const currentPrice = formData.customPrice || selectedProduct.price;
+      const todayCredit = Number(currentPrice) * Number(formData.salesQuantity);
+      const previousBalance = Number(formData.previousBalance) || 0;
+      const totalAmountReceived = Number(formData.totalAmountReceived) || 0;
+      const totalBalance = previousBalance + todayCredit - totalAmountReceived;
+      
+      setFormData(prev => ({
+        ...prev,
+        todayCredit,
+        totalBalance
+      }));
+    }
+  }, [selectedProduct, formData.salesQuantity, formData.totalAmountReceived, formData.previousBalance, formData.customPrice]);
 
-const handleChange = (e) => {
-  const { name, value } = e.target;
-  setFormData(prev => ({ 
-    ...prev, 
-    [name]: name === "salesQuantity" || name === "emptyQuantity" || name === "totalAmountReceived" 
-      ? Number(value) || 0 
-      : value 
-  }));
-};
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ 
+      ...prev, 
+      [name]: name === "salesQuantity" || name === "emptyQuantity" || name === "totalAmountReceived" || name === "customPrice"
+        ? Number(value) || 0 
+        : value 
+    }));
+  };
+
+  const handleCustomPriceChange = (e) => {
+    const { value } = e.target;
+    const price = parseFloat(value) || 0;
+    
+    setFormData(prev => {
+      const updatedData = {
+        ...prev,
+        customPrice: price > 0 ? price : null,
+        todayCredit: price > 0 ? price * prev.salesQuantity : (selectedProduct?.price || 0) * prev.salesQuantity
+      };
+      
+      updatedData.totalBalance = (updatedData.previousBalance || 0) + 
+                               updatedData.todayCredit - 
+                               updatedData.totalAmountReceived;
+      
+      return updatedData;
+    });
+  };
 
   const handleCustomerChange = (selectedOption) => {
     setFormData(prev => ({
       ...prev,
       customerId: selectedOption ? selectedOption.value : "",
-      customerData: selectedOption ? selectedOption.data : null
+      customerData: selectedOption ? selectedOption.data : null,
+      customPrice: null // Reset custom price when customer changes
     }));
   };
 
@@ -141,7 +165,8 @@ const handleChange = (e) => {
     setFormData(prev => ({
       ...prev,
       productId: selectedOption ? selectedOption.value : "",
-      productData: selectedOption ? selectedOption.data : null
+      productData: selectedOption ? selectedOption.data : null,
+      customPrice: null // Reset custom price when product changes
     }));
   };
 
@@ -172,6 +197,9 @@ const handleChange = (e) => {
     }
 
     try {
+      // Determine the actual price used
+      const actualPrice = formData.customPrice || selectedProduct.price;
+
       // Prepare complete sale data with only essential route information
       const saleData = {
         ...formData,
@@ -179,7 +207,9 @@ const handleChange = (e) => {
         customerPhone: selectedCustomer.phone,
         customerAddress: selectedCustomer.address,
         productName: selectedProduct.name,
-        productPrice: selectedProduct.price,
+        productPrice: actualPrice, // Use the actual price (custom or default)
+        baseProductPrice: selectedProduct.price, // Store the base price for reference
+        isCustomPrice: formData.customPrice !== null, // Flag for custom pricing
         routeId: selectedRoute.id,
         routeName: selectedRoute.name,
         timestamp: new Date()
@@ -204,7 +234,8 @@ const handleChange = (e) => {
           const customerDocRef = querySnapshot.docs[0].ref;
           await updateDoc(customerDocRef, {
             currentBalance: formData.totalBalance,
-            currentGasOnHand: (selectedCustomer.currentGasOnHand || 0) - formData.emptyQuantity + formData.salesQuantity
+            currentGasOnHand: (selectedCustomer.currentGasOnHand || 0) - formData.emptyQuantity + formData.salesQuantity,
+            lastPurchaseDate: new Date()
           });
         }
       }
@@ -219,13 +250,14 @@ const handleChange = (e) => {
         productData: null,
         routeId: "",
         routeData: null,
-        salesQuantity: 0,
+        salesQuantity: 1,
         emptyQuantity: 0,
         todayCredit: 0,
         totalAmountReceived: 0,
         totalBalance: 0,
         previousBalance: 0,
-        date: new Date().toISOString().split('T')[0]
+        date: new Date().toISOString().split('T')[0],
+        customPrice: null
       });
       setSelectedProduct(null);
       setSelectedCustomer(null);
@@ -327,10 +359,36 @@ const handleChange = (e) => {
         {selectedProduct && (
           <>
             <div className="form-group">
-              <label>Product Price:</label>
+              <label>Base Price (₹):</label>
               <input
                 type="number"
                 value={selectedProduct.price}
+                readOnly
+              />
+            </div>
+            
+            <div className="form-group">
+              <label>
+                Custom Price (₹) {formData.customPrice !== null && (
+                  <span className="badge bg-warning text-dark">Custom</span>
+                )}
+              </label>
+              <input
+                type="number"
+                name="customPrice"
+                value={formData.customPrice || ''}
+                onChange={handleCustomPriceChange}
+                placeholder="Enter custom price"
+                min="0"
+                step="0.01"
+              />
+            </div>
+            
+            <div className="form-group">
+              <label>Actual Price (₹):</label>
+              <input
+                type="number"
+                value={formData.customPrice || selectedProduct.price}
                 readOnly
               />
             </div>
@@ -361,7 +419,7 @@ const handleChange = (e) => {
             </div>
             
             <div className="form-group">
-              <label>Today Credit:</label>
+              <label>Today Credit (₹):</label>
               <input
                 type="number"
                 name="todayCredit"
@@ -371,7 +429,7 @@ const handleChange = (e) => {
             </div>
             
             <div className="form-group">
-              <label>Previous Balance:</label>
+              <label>Previous Balance (₹):</label>
               <input
                 type="number"
                 name="previousBalance"
@@ -381,7 +439,7 @@ const handleChange = (e) => {
             </div>
             
             <div className="form-group">
-              <label>Total Amount Received:</label>
+              <label>Total Amount Received (₹):</label>
               <input
                 type="number"
                 name="totalAmountReceived"
@@ -393,7 +451,7 @@ const handleChange = (e) => {
             </div>
             
             <div className="form-group">
-              <label>Total Balance:</label>
+              <label>Total Balance (₹):</label>
               <input
                 type="number"
                 name="totalBalance"

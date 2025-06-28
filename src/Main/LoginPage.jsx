@@ -48,7 +48,7 @@ const LoginPage = ({ setIsAuthenticated }) => {
 
   return (
     <div className="login-page-container">
-      <h2>Login</h2>
+      <h2>Admin Login</h2>
       <form onSubmit={handleLogin} className="login-form">
         <div className="form-group">
           <label>Email:</label>

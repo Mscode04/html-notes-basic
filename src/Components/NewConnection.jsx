@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { collection, addDoc, getDocs } from "firebase/firestore";
+import { collection, addDoc, getDocs,query,limit,orderBy } from "firebase/firestore";
 import { db } from "../Firebase/config";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -23,27 +23,39 @@ const NewConnection = () => {
     currentBalance: 0
   });
 
-  useEffect(() => {
-    // Generate initial ID
-    setFormData(prev => ({ ...prev, id: "00001" }));
-    
-    // Fetch routes for dropdown
-    const fetchRoutes = async () => {
-      try {
-        const querySnapshot = await getDocs(collection(db, "routes"));
-        const routesData = querySnapshot.docs.map(doc => ({
-          id: doc.id,
-          ...doc.data()
-        }));
-        setRoutes(routesData);
-      } catch (error) {
-        toast.error("Failed to load routes");
-        console.error("Error fetching routes: ", error);
+ useEffect(() => {
+  const fetchLatestCustomerAndRoutes = async () => {
+    try {
+      // Fetch routes
+      const routesQuery = await getDocs(collection(db, "routes"));
+      const routesData = routesQuery.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      }));
+      setRoutes(routesData);
+
+      // Fetch latest customer to determine next ID
+      const customersQuery = await getDocs(
+        query(collection(db, "customers"), orderBy("id", "desc"), limit(1))
+      );
+      
+      let nextId = "00001"; // Default starting ID
+      
+      if (!customersQuery.empty) {
+        const latestCustomer = customersQuery.docs[0].data();
+        const latestId = parseInt(latestCustomer.id);
+        nextId = String(latestId + 1).padStart(5, '0');
       }
-    };
-    
-    fetchRoutes();
-  }, []);
+      
+      setFormData(prev => ({ ...prev, id: nextId }));
+    } catch (error) {
+      toast.error("Failed to load initial data");
+      console.error("Error fetching data: ", error);
+    }
+  };
+  
+  fetchLatestCustomerAndRoutes();
+}, []);
 
   const generatePassword = (phone) => {
     const randomChars = phone?.slice(-4) + "@tbgmkba";
@@ -59,38 +71,49 @@ const NewConnection = () => {
     }));
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setIsSubmitting(true);
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  setIsSubmitting(true);
+  
+  try {
+    await addDoc(collection(db, "customers"), formData);
+    toast.success("Customer added successfully!", {
+      onClose: () => navigate("/all-customers"),
+      autoClose: 3000
+    });
     
-    try {
-      await addDoc(collection(db, "customers"), formData);
-      toast.success("Customer added successfully!", {
-        onClose: () => navigate("/all-customers"),
-        autoClose: 3000
-      });
-      
-      // Reset form with new ID
-      const newId = String(parseInt(formData.id) + 1).padStart(5, '0');
-      setFormData({
-        id: newId,
-        name: "",
-        organization: "",
-        phone: "",
-        address: "",
-        ownerName: "",
-        ownerPhone: "",
-        password: "",
-        route: "",
-        currentBalance: 0
-      });
-    } catch (error) {
-      toast.error("Error adding customer: " + error.message);
-      console.error("Error adding document: ", error);
-    } finally {
-      setIsSubmitting(false);
+    // Reset form (ID will be updated by the useEffect on next render)
+    setFormData({
+      id: "", // This will be set by useEffect
+      name: "",
+      organization: "",
+      phone: "",
+      address: "",
+      ownerName: "",
+      ownerPhone: "",
+      password: generatePassword(formData.phone),
+      route: "",
+      currentBalance: 0
+    });
+    
+    // Trigger a refetch of the latest ID
+    const customersQuery = await getDocs(
+      query(collection(db, "customers"), orderBy("id", "desc"), limit(1))
+    );
+    
+    if (!customersQuery.empty) {
+      const latestCustomer = customersQuery.docs[0].data();
+      const nextId = String(parseInt(latestCustomer.id) + 1).padStart(5, '0');
+      setFormData(prev => ({ ...prev, id: nextId }));
     }
-  };
+    
+  } catch (error) {
+    toast.error("Error adding customer: " + error.message);
+    console.error("Error adding document: ", error);
+  } finally {
+    setIsSubmitting(false);
+  }
+};
 
   return (
     <div className="form-container">

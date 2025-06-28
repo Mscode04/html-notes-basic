@@ -33,7 +33,7 @@ function App() {
     
       <Routes>
         <Route path="/login" element={!isAuthenticated ? <LoginPage setIsAuthenticated={setIsAuthenticated} /> : <Navigate to="/dashboard" />} />
-        <Route path="/logout" element={<Logout onLogout={handleLogout} />} />
+        <Route path="logout" element={<Logout onLogout={handleLogout} />} />
         
         {/* Protected routes */}
         <Route path="/" element={<Main />}>
